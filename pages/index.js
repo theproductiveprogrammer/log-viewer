@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
@@ -6,6 +7,8 @@ import styles from '@/styles/Home.module.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const [txt, setTxt] = useState("");
+
   return (
     <>
       <Head>
@@ -18,7 +21,7 @@ export default function Home() {
           <p>
             Paste your log below:
           </p>
-          <textarea></textarea>
+          <textarea value={txt} onChange={e => setTxt(e.target.value)}></textarea>
         </div>
         <div className={styles.display}>
           <div className={styles.title}>Log Viewer</div>
