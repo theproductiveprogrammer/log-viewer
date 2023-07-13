@@ -75,7 +75,6 @@ function parseLog(txt) {
       const chunk = get_chunk_1(l);
       break;
     }
-    console.log(l)
     if(l.curr_chunk) {
       if(l.line_left) l.line_left = l.curr_chunk + " " + l.line_left;
       else l.line_left = l.curr_chunk;
