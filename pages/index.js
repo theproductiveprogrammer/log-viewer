@@ -43,13 +43,15 @@ function LogViewer({txt}) {
 
   const orig = txt.split(/[\r\n]+/g);
   let prev = <div className={styles.prev}>0 left</div>;
+  let start = 0;
   let lines = orig;
   if(orig.length > mx) {
-    lines = orig.slice(orig.length-mx, orig.length);
-    prev = <div className={styles.prevactive} onClick={() => setMx(mx + 50)}>&#8593;...{orig.length - mx} more</div>
+    start = orig.length-mx;
+    lines = orig.slice(start, orig.length);
+    prev = <div className={styles.prevactive} onClick={() => setMx(mx + 50)}>&#8593;...{start} more</div>
   }
 
-  const loglines = parseLog(lines, marks, sel);
+  const loglines = parseLog(start, lines, marks, sel);
 
   function mark(ll) {
     const curr = marks[ll.num] || 0;
@@ -130,7 +132,7 @@ function LogLine({ll,mark,sel}) {
 
 }
 
-function parseLog(lines, marks, sel) {
+function parseLog(start, lines, marks, sel) {
   lines = lines.map(l => {
     return {
       line_left: l.trim(),
@@ -178,7 +180,7 @@ function parseLog(lines, marks, sel) {
   });
 
   loglines.forEach((ll,i) => {
-    ll.num = i;
+    ll.num = start + i;
     ll.mark = marks[ll.num];
   });
 
