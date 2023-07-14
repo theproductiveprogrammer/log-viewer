@@ -12,12 +12,20 @@ export default function Home() {
   const [txt, setTxt] = useState("");
   const [search, setSearch] = useState("");
 
+  const search_rx = search ? new RegExp(search, 'i') : null;
+
   const lines = txt ? txt.split(/[\r\n]+/g).map((txt,i) => {
+    txt = txt.trim();
+    if(!txt) return null;
+
+    const search_match = search_rx ? txt.search(search_rx) != -1 : null;
+
     return {
-      txt: txt.trim(),
+      txt,
       num: i+1,
+      search_match,
     }
-  }) : null;
+  }).filter(l => l) : null;
 
   return (
     <>
@@ -37,7 +45,7 @@ export default function Home() {
           <div className={styles.title}>Log Viewer</div>
           <Search search={search} setSearch={setSearch}/>
 
-          <LogViewer lines={lines}/>
+          <LogViewer search={search} lines={lines}/>
         </div>
       </main>
     </>
@@ -122,9 +130,12 @@ function LogViewer({lines}) {
 function LogLine({ll,mark,sel}) {
   const markstyle = styles[`mark${(ll.mark || 0) % 3}`];
   const levelstyle = styles[`level-${ll.level}`.toLowerCase()];
+  let searchstyle = "";
+  if(ll.search_match === false) searchstyle = styles.search_result_fail;
+  if(ll.search_match === true) searchstyle = styles.search_result_pass;
   const headercontent = ll.date || ll.level;
   return (
-    <div className={`${styles.logline} ${levelstyle} ${markstyle}`}>
+    <div className={`${styles.logline} ${levelstyle} ${markstyle} ${searchstyle}`}>
 
       <div className={styles.mark} onClick={() => mark(ll)}></div>
 
@@ -179,6 +190,8 @@ function parseLog(lines, marks, sel) {
       level: null,
       source: null,
       msg: null,
+      num: null,
+      search_match: false,
     };
   }
   let curr = new_ll_1();
@@ -210,9 +223,12 @@ function parseLog(lines, marks, sel) {
       curr.msg = l.line_left;
       curr.num = line.num;
       curr.mark = marks[curr.num];
+      if(line.search_match) curr.search_match = true;
       loglines.push(curr);
     } else if(l.line_left) {
-      loglines[loglines.length - 1].msg += '\n' + l.line_left;
+      const prev = loglines[loglines.length - 1];
+      if(line.search_match) prev.search_match = true;
+      prev.msg += '\n' + l.line_left;
     }
     curr = new_ll_1();
   });
