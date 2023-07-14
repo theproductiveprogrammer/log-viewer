@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
@@ -39,19 +39,17 @@ function LogViewer({txt}) {
   const [sel, setSel] = useState("");
   const [mx, setMx] = useState(100);
 
-  function handleScroll() {
-    if(window.innerHeight + document.documentElement.scrollTop + 500 < document.documentElement.offsetHeight) {
-      return;
-    }
-    setMx(mx + 100);
-  }
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [mx]);
-
   if(!txt) return (<div></div>);
-  const loglines = parseLog(mx, txt, marks, sel);
+
+  const orig = txt.split(/[\r\n]+/g);
+  let prev = <div className={styles.prev}>0 left</div>;
+  let lines = orig;
+  if(orig.length > mx) {
+    lines = orig.slice(orig.length-mx, orig.length);
+    prev = <div className={styles.prevactive} onClick={() => setMx(mx + 50)}>&#8593;...{orig.length - mx} more</div>
+  }
+
+  const loglines = parseLog(lines, marks, sel);
 
   function mark(ll) {
     const curr = marks[ll.num] || 0;
@@ -69,9 +67,15 @@ function LogViewer({txt}) {
   }
 
   return (
-    <div className={styles.logcontainer} onMouseUp={handleSel} onDoubleClick={handleSel}>
-    {loglines.map(ll => <LogLine key={ll.num} ll={ll} mark={mark} sel={sel}/>)}
-    </div>
+    <>
+      <div className={styles.counter}>
+        {prev}
+        <div className={styles.count}>{lines.length} shown</div>
+      </div>
+      <div className={styles.logcontainer} onMouseUp={handleSel} onDoubleClick={handleSel}>
+      {loglines.map(ll => <LogLine key={ll.num} ll={ll} mark={mark} sel={sel}/>)}
+      </div>
+    </>
   );
 }
 
@@ -126,13 +130,7 @@ function LogLine({ll,mark,sel}) {
 
 }
 
-function parseLog(mx, txt, marks, sel) {
-  let lines = txt.split(/[\r\n]+/g);
-  if(lines.length > mx) {
-    const more_msg = `TRACE LogViewer (${lines.length - mx} more)`;
-    lines = lines.slice(lines.length-mx, lines.length);
-    lines.push(more_msg);
-  }
+function parseLog(lines, marks, sel) {
   lines = lines.map(l => {
     return {
       line_left: l.trim(),
