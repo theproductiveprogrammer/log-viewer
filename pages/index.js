@@ -138,7 +138,7 @@ function LogViewer({lines}) {
         {prev}
         <div className={styles.count}>{view.length} shown</div>
       </div>
-      <Marks marks={marks} />
+      <Marks marks={marks} lines={lines} />
       <div className={styles.logcontainer} onMouseUp={handleSel} onDoubleClick={handleSel}>
       {loglines.map(ll => <LogLine key={ll.num} ll={ll} mark={mark} sel={sel}/>)}
       </div>
@@ -146,11 +146,23 @@ function LogViewer({lines}) {
   );
 }
 
-function Marks({marks}) {
+function Marks({lines, marks}) {
   const types = {};
   for(let k in marks) {
     const curr = types[marks[k]] || 0;
     types[marks[k]] = curr + 1;
+  }
+
+  function copyMarks(type) {
+    const marked = [];
+    for(let k in marks) {
+      if(marks[k] != type) continue;
+      marked.push(lines[k-1].txt);
+    }
+    if(marked.length == 0) return;
+    navigator.clipboard.writeText(marked.join("\n"))
+    .then(() => alert('copied to clipboard'))
+    .catch(err => console.error(err));
   }
 
   const show = []
@@ -158,7 +170,7 @@ function Marks({marks}) {
     if(!(k%3)) continue;
     const markstyle = styles[`mark${k % 3}`] || "";
     show.push((
-      <div key={k} className={`${styles.markscopy} ${markstyle}`}>
+      <div key={k} className={`${styles.markscopy} ${markstyle}`} onClick={() => copyMarks(k)}>
         <div key={k} className={styles.mark}></div><div>{types[k]}</div>
       </div>
     ));
