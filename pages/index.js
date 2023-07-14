@@ -138,7 +138,7 @@ function LogViewer({lines}) {
         {prev}
         <div className={styles.count}>{view.length} shown</div>
       </div>
-      <Marks marks={marks} lines={lines} />
+      <Marks marks={marks} loglines={loglines} />
       <div className={styles.logcontainer} onMouseUp={handleSel} onDoubleClick={handleSel}>
       {loglines.map(ll => <LogLine key={ll.num} ll={ll} mark={mark} sel={sel}/>)}
       </div>
@@ -146,18 +146,26 @@ function LogViewer({lines}) {
   );
 }
 
-function Marks({lines, marks}) {
+function Marks({loglines, marks}) {
   const types = {};
   for(let k in marks) {
     const curr = types[marks[k]] || 0;
     types[marks[k]] = curr + 1;
   }
 
+  function find_logline_1(k) {
+    for(let i = 0;i< loglines.length;i++) {
+      const ll = loglines[i];
+      if(ll.num == k) return ll;
+    }
+  }
+
   function copyMarks(type) {
     const marked = [];
     for(let k in marks) {
       if(marks[k] != type) continue;
-      marked.push(lines[k-1].txt);
+      const ll = find_logline_1(k);
+      if(ll) marked.push(ll.txt);
     }
     if(marked.length == 0) return;
     navigator.clipboard.writeText(marked.join("\n"))
@@ -241,6 +249,7 @@ function parseLog(lines, marks, sel) {
   const loglines = [];
   const new_ll_1 = () => {
     return {
+      txt: null,
       meta: [],
       date: null,
       level: null,
@@ -253,6 +262,9 @@ function parseLog(lines, marks, sel) {
   let curr = new_ll_1();
 
   lines.forEach(line => {
+    if(!curr.txt) curr.txt = line.txt;
+    else curr.txt += '\n' + line.txt;
+
     const l = {
       line_left: line.txt,
       curr_chunk: null,
@@ -288,6 +300,7 @@ function parseLog(lines, marks, sel) {
       if(line.search_match === true) prev.search_match = true;
       if(line.search_match === false && !prev.search_match) prev.search_match = false;
       prev.msg += '\n' + l.line_left;
+      prev.txt += '\n' + curr.txt;
     }
     curr = new_ll_1();
   });
