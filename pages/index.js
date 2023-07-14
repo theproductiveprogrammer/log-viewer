@@ -33,24 +33,37 @@ export default function Home() {
 }
 
 function LogViewer({txt}) {
+  const [marks, setMarks] = useState({});
+
   if(!txt) return (<div></div>);
-  const loglines = parseLog(txt);
+  const loglines = parseLog(txt, marks);
+
+  function mark(ll) {
+    const curr = marks[ll.num] || 0;
+    setMarks(prev => {
+      return {
+        ...prev,
+        [ll.num]: curr + 1,
+      };
+    });
+  }
+
   return (
     <div className={styles.logContainer}>
-    {loglines.map(ll => <LogLine ll={ll} />)}
+    {loglines.map(ll => <LogLine key={ll.num} ll={ll} mark={mark}/>)}
     </div>
   );
 }
 
-function LogLine({ll}) {
+function LogLine({ll,mark}) {
   return (
-    <div className={styles.logLine}>
+    <div className={styles.logLine} onClick={() => mark(ll)}>
     {JSON.stringify(ll)}
     </div>
   );
 }
 
-function parseLog(txt) {
+function parseLog(txt, marks) {
   const lines = txt.split(/[\r\n]+/g).map(l => {
     return {
       line_left: l.trim(),
@@ -95,6 +108,11 @@ function parseLog(txt) {
       loglines[loglines.length - 1].msg += '\n' + l.line_left;
     }
     curr = new_ll_1();
+  });
+
+  loglines.forEach((ll,i) => {
+    ll.num = i;
+    ll.mark = marks[ll.num];
   });
 
   return loglines;
