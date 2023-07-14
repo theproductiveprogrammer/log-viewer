@@ -1,0 +1,185 @@
+.title {
+  font-size: 2em;
+  text-align: center;
+  font-weight: 500;
+  font-variant: all-small-caps;
+  color: #333;
+}
+.logcontainer {
+  width: 100%;
+  margin: 2em auto;
+}
+
+.logline {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  position: relative;
+  color: #666;
+  margin-top: 1em;
+  padding-top: 0.5em;
+
+  padding-bottom: 16px;
+  box-shadow: 0px 1px 0px #e2d8f3;
+}
+
+.logline_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.7em;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.mark {
+  width: 16px;
+  height: 8px;
+  line-height: 1em;
+  cursor: pointer;
+  background: #ccc;
+}
+.mark1 .mark { background: #f44336; }
+.mark2 .mark { background: #2196f3; }
+.mark3 .mark { background: #3f51b5; }
+.logline.mark1 { background: rgb(244 67 54 / 7%); }
+.logline.mark2 { background: rgb(33 150 243 / 10%); }
+.logline .mark {
+  margin-right: 8px;
+}
+
+.level {
+  margin-left: 32px;
+  font-weight: 200;
+}
+.level-info .level {
+  color: #ccc;
+}
+.level-debug .level {
+  color: blue;
+}
+.level-trace .level {
+  color: blue;
+}
+.level-warn .level {
+  color: #f44336;
+}
+.level-error .level {
+  color: red;
+}
+
+
+.metacont {
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+  display: flex;
+  flex-direction: row;
+  font-size: 0.5em;
+}
+.meta {
+  margin: 0 2px;
+}
+
+.source {
+  margin-left: 32px;
+  font-size: 0.7em;
+  /*
+  color: #ccc;
+  color: #f44336;
+  color: #2196f3;
+  color: #3f51b5;
+  color: #e2d8f3;
+  color: #8b63cf;
+  */
+  font-weight: 200;
+  margin-bottom: 1px;
+}
+
+.msgcont {
+  width: 90%;
+  margin-left: 2%;
+  font-size: 14px;
+}
+.logcontent {
+  width: calc(100% - 32px);
+}
+.selected {
+  background: #ccf;
+}
+
+.counter {
+  font-size: 0.7em;
+  text-align: right;
+  color: #8b63cf;
+}
+.prevactive {
+  cursor: pointer;
+}
+.prevactive:hover {
+  text-decoration: underline;
+}
+
+
+.searchcont {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+}
+
+.search {
+  border: none;
+  border-radius: 4px;
+  padding: 4px;
+  border: 1px solid #e2d8f3;
+}
+.search:focus,
+.search:active {
+  box-shadow: 0px 0px 2px 2px #e2d8f3;
+  outline: none;
+}
+.search::-ms-input-placeholder {
+  opacity: 0.5;
+}
+.search::placeholder {
+  opacity: 0.5;
+}
+.search_result_fail {
+  opacity: 0.5;
+}
+.search_result_pass {
+  color: #66f;
+}
+
+.markscopycont {
+  font-size: 0.5em;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.markscopy {
+  display: flex;
+  flex-direction: row;
+  margin-left: 6px;
+  margin-top: 6px;
+  cursor: pointer;
+}
+.markscopy .mark {
+  margin-right: 2px;
+}
+
+.err_stack_block {
+}
+
+.level-error .err_stack_block .err_stack_hl {
+  color: #f44336;
+}
+
+.err_stack_minim {
+  font-size: 0.5em;
+}
+
