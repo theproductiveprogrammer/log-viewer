@@ -140,8 +140,8 @@ function LogViewer({lines}) {
 }
 
 function LogLine({ll,mark,sel}) {
-  const markstyle = styles[`mark${(ll.mark || 0) % 3}`];
-  const levelstyle = styles[`level-${ll.level}`.toLowerCase()];
+  const markstyle = styles[`mark${(ll.mark || 0) % 3}`] || "";
+  const levelstyle = styles[`level-${ll.level}`.toLowerCase()] || "";
   let searchstyle = "";
   if(ll.search_match === false) searchstyle = styles.search_result_fail;
   if(ll.search_match === true) searchstyle = styles.search_result_pass;
