@@ -79,7 +79,7 @@ function LogViewer({lines}) {
       i++;
       if(i > 100) return;
       const start = lines.length-mx_;
-      const ll = parseLog([lines[start]], marks, sel)[0];
+      const ll = parseLog([lines[start]], {}, "")[0];
       if(ll.date || ll.meta.length || ll.level || ll.source) break;
       mx_ += 1;
     }
