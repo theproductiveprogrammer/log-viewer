@@ -51,7 +51,8 @@
   align-items: flex-start;
   position: relative;
   color: #666;
-  margin-top: 1.2em;
+  margin-top: 1em;
+  padding-top: 0.5em;
 
   padding-bottom: 16px;
   box-shadow: 0px 1px 0px #e2d8f3;
@@ -67,11 +68,7 @@
   margin-bottom: 8px;
 }
 
-.mark0,
-.mark1,
-.mark2,
-.mark3,
-.mark4 {
+.mark {
   width: 16px;
   height: 8px;
   line-height: 1em;
@@ -79,9 +76,11 @@
   cursor: pointer;
   background: #ccc;
 }
-.mark1 { background: #f44336; }
-.mark2 { background: #2196f3; }
-.mark3 { background: #3f51b5; }
+.mark1 .mark { background: #f44336; }
+.mark2 .mark { background: #2196f3; }
+.mark3 .mark { background: #3f51b5; }
+.mark1 { background: rgb(244 67 54 / 7%); }
+.mark2 { background: rgb(33 150 243 / 10%); }
 
 .level {
   margin-left: 32px;

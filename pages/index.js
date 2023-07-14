@@ -84,9 +84,9 @@ function LogLine({ll,mark,sel}) {
   const levelstyle = styles[`level-${ll.level}`.toLowerCase()];
   const headercontent = ll.date || ll.level;
   return (
-    <div className={`${styles.logline} ${levelstyle}`}>
+    <div className={`${styles.logline} ${levelstyle} ${markstyle}`}>
 
-      <div className={markstyle} onClick={() => mark(ll)}></div>
+      <div className={styles.mark} onClick={() => mark(ll)}></div>
 
       <div className={styles.logcontent}>
       {headercontent ? (
