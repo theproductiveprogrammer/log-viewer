@@ -37,7 +37,7 @@ export default function Home() {
 function LogViewer({txt}) {
   const [marks, setMarks] = useState({});
   const [sel, setSel] = useState("");
-  const [mx, setMx] = useState(5);
+  const [mx, setMx] = useState(100);
 
   function handleScroll() {
     if(window.innerHeight + document.documentElement.scrollTop + 500 < document.documentElement.offsetHeight) {
