@@ -51,16 +51,42 @@ function LogViewer({txt}) {
   }
 
   return (
-    <div className={styles.logContainer}>
+    <div className={styles.logcontainer}>
     {loglines.map(ll => <LogLine key={ll.num} ll={ll} mark={mark}/>)}
     </div>
   );
 }
 
 function LogLine({ll,mark}) {
+  const markstyle = styles[`mark${(ll.mark || 0) % 3}`];
+  const levelstyle = styles[`level-${ll.level}`.toLowerCase()];
+  const headercontent = ll.date || ll.level;
   return (
-    <div className={styles.logLine} onClick={() => mark(ll)}>
-    {JSON.stringify(ll)}
+    <div className={`${styles.logline} ${levelstyle}`}>
+
+      <div className={markstyle} onClick={() => mark(ll)}></div>
+
+      <div className={styles.logcontent}>
+      {headercontent ? (
+        <div className={styles.logline_header}>
+          <div className={styles.date}>{ll.date && ll.date.toLocaleString(DateTime.DATETIME_FULL)}</div>
+          <div className={styles.level}>{ll.level && `[${ll.level}]`}</div>
+        {ll.source ? (
+          <div className={styles.source}>{ll.source}: </div>
+        ) : ""}
+        </div>
+      ) : ""}
+
+        <div className={styles.msgcont}>
+          <div className={styles.msg}>{ll.msg}</div>
+        </div>
+
+        <div className={styles.metacont}>
+        {ll.meta.map((meta,i) => <div key={i} className={styles.meta}>{meta}</div>)}
+        </div>
+      </div>
+
+
     </div>
   );
 }

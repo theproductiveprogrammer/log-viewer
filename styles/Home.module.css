@@ -9,7 +9,7 @@
 .entry {
   display: flex;
   flex-direction: column;
-  width: 40%;
+  width: 20%;
   padding: 2em;
   box-shadow: 1px 0 2px #666;
 
@@ -28,7 +28,7 @@
 }
 
 .display {
-  width: 59%;
+  width: 79%;
   background: white;
   padding: 2em;
 }
@@ -39,10 +39,103 @@
   font-variant: all-small-caps;
   color: #333;
 }
-.log-container {
-  width: 90%;
-  margin: 0 auto;
+.logcontainer {
+  width: 100%;
+  margin: 2em auto;
 }
-.log-line {
+
+.logline {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: start;
+  position: relative;
   color: #666;
+  margin-top: 1.2em;
+
+  padding-bottom: 16px;
+  box-shadow: 0px 1px 0px #e2d8f3;
+}
+
+.logline_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  font-size: 0.7em;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.mark0,
+.mark1,
+.mark2,
+.mark3,
+.mark4 {
+  width: 16px;
+  height: 8px;
+  line-height: 1em;
+  margin-right: 8px;
+  cursor: pointer;
+  background: #ccc;
+}
+.mark1 { background: #f44336; }
+.mark2 { background: #2196f3; }
+.mark3 { background: #3f51b5; }
+
+.level {
+  margin-left: 32px;
+  font-weight: 200;
+}
+.level-info .level {
+  color: #ccc;
+}
+.level-debug .level {
+  color: blue;
+}
+.level-trace .level {
+  color: blue;
+}
+.level-warn .level {
+  color: #f44336;
+}
+.level-error .level {
+  color: red;
+}
+
+
+.metacont {
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+  display: flex;
+  flex-direction: row;
+  font-size: 0.5em;
+}
+.meta {
+  margin: 0 2px;
+}
+
+.source {
+  margin-left: 32px;
+  font-size: 0.7em;
+  /*
+  color: #ccc;
+  color: #f44336;
+  color: #2196f3;
+  color: #3f51b5;
+  color: #e2d8f3;
+  color: #8b63cf;
+  */
+  font-weight: 200;
+  margin-bottom: 1px;
+}
+
+.msgcont {
+  width: 90%;
+  margin-left: 2%;
+  font-size: 14px;
+}
+.logcontent {
+  width: 100%;
 }
