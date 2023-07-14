@@ -15,6 +15,9 @@ export default function Home() {
   let search_rx = null;
   if(search) {
     try { search_rx = new RegExp(search, 'i'); } catch(e) { /* ignore */ }
+    if(!search_rx) {
+      try { search_rx = new RegExp(escapeRegex(search), 'i'); } catch(e) { /* ignore */ }
+    }
   }
 
   const lines = txt ? txt.split(/[\r\n]+/g).map((txt,i) => {
