@@ -60,9 +60,9 @@ function parseLog(txt) {
   const loglines = [];
   const new_ll_1 = () => {
     return {
+      meta: [],
       date: null,
       level: null,
-      meta: [],
       source: null,
       msg: null,
     };
@@ -73,11 +73,20 @@ function parseLog(txt) {
     while(true) {
       if(!curr.date) curr.date = get_date_1(l);
       const chunk = get_chunk_1(l);
-      break;
-    }
-    if(l.curr_chunk) {
-      if(l.line_left) l.line_left = l.curr_chunk + " " + l.line_left;
-      else l.line_left = l.curr_chunk;
+      if(!chunk) {
+        l.line_left = curr.meta.join(" ");
+        curr.meta = [];
+        break;
+      }
+      if(curr.level) {
+        curr.source = chunk;
+        break;
+      }
+      if(/^(INFO|DEBUG|TRACE|WARN|ERROR)$/.test(chunk)) {
+        curr.level = chunk;
+        continue;
+      }
+      curr.meta.push(chunk);
     }
     if(loglines.length == 0 || curr.date || curr.level || curr.sources || curr.meta.length) {
       curr.msg = l.line_left;
@@ -96,7 +105,7 @@ function parseLog(txt) {
     while(sz > 0) {
       const dt = new Date(l_.substring(0, sz));
       if(!isNaN(dt.getTime())) {
-        l.curr_chunk = l.line_left.substring(0, sz).trim();
+        l.curr_chunk = null;
         l.line_left = l.line_left.substring(sz).trim();
         return dt;
       }
@@ -105,11 +114,26 @@ function parseLog(txt) {
   }
 
   function get_chunk_1(l) {
-    const ndx = l.line_left.indexOf(/\s/);
-    if(ndx != -1) {
-      l.curr_chunk = l.line_left.substring(0, ndx).trim();
-      l.line_left = l.line_left.substring(ndx).trim();
+    if(!l.line_left) return null;
+
+    let rx = /^\s*\[/
+    let m = l.line_left.match(rx);
+    if(m) {
+      const ndx = l.line_left.indexOf(']');
+      l.curr_chunk = l.line_left.substring(m[0].length, ndx).trim();
+      l.line_left = l.line_left.substring(ndx+1).trim();
+      return l.curr_chunk;
     }
-    return l;
+
+    rx = /[\s:-]+/;
+    m = l.line_left.match(rx);
+    if(!m) {
+      l.curr_chunk = l.line_left;
+      l.line_left = "";
+    } else {
+      l.curr_chunk = l.line_left.substring(0, m.index);
+      l.line_left = l.line_left.substring(m.index + m[0].length);
+    }
+    return l.curr_chunk;
   }
 }
