@@ -203,7 +203,7 @@ function parseLog(lines, marks, sel) {
       source: null,
       msg: null,
       num: null,
-      search_match: false,
+      search_match: null,
     };
   }
   let curr = new_ll_1();
