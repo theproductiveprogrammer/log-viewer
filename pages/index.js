@@ -86,6 +86,18 @@ function LogViewer({lines}) {
     if(mx_ != mx) setMx(mx_);
   }, [mx,lines]);
 
+  function showMore() {
+    const start = mx + 1;
+    for(let i = start;lines.length > i;i++) {
+      const line = lines[lines.length-i];
+      if(line.search_match) {
+        setMx(i);
+        return;
+      }
+    }
+    setMx(mx + 50);
+  }
+
   if(!lines || !lines.length) return (<div></div>);
 
   let prev = <div className={styles.prev}>0 left</div>;
@@ -94,7 +106,7 @@ function LogViewer({lines}) {
   if(lines.length > mx) {
     const start = lines.length - mx;
     view = lines.slice(start, lines.length);
-    prev = <div className={styles.prevactive} onClick={() => setMx(mx + 50)}>&#8593;...{start} more</div>
+    prev = <div className={styles.prevactive} onClick={showMore}>&#8593;...{start} more</div>
   }
 
   let loglines = parseLog(view, marks, sel);
