@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
@@ -10,6 +10,14 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   const [txt, setTxt] = useState("");
+  const [search, setSearch] = useState("");
+
+  const lines = txt ? txt.split(/[\r\n]+/g).map((txt,i) => {
+    return {
+      txt: txt.trim(),
+      num: i+1,
+    }
+  }) : null;
 
   return (
     <>
@@ -27,41 +35,61 @@ export default function Home() {
         </div>
         <div className={styles.display}>
           <div className={styles.title}>Log Viewer</div>
-          <Search />
+          <Search search={search} setSearch={setSearch}/>
 
-          <LogViewer txt={txt}/>
+          <LogViewer lines={lines}/>
         </div>
       </main>
     </>
   )
 }
 
-function Search(props) {
+function Search({search, setSearch}) {
   return (
     <div className={styles.searchcont}>
-      <input type="text" />
+      <input
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        className={styles.search}
+        type="text"
+        placeholder="/search" />
     </div>
   );
 }
 
-function LogViewer({txt}) {
+function LogViewer({lines}) {
   const [marks, setMarks] = useState({});
   const [sel, setSel] = useState("");
   const [mx, setMx] = useState(100);
 
-  if(!txt) return (<div></div>);
+  useEffect(() => {
+    if(!lines || !lines.length) return;
 
-  const orig = txt.split(/[\r\n]+/g);
+    let mx_ = mx;
+    let i = 0;
+    while(lines.length > mx_) {
+      i++;
+      if(i > 100) return;
+      const start = lines.length-mx_;
+      const ll = parseLog([lines[start]], marks, sel)[0];
+      if(ll.date || ll.meta.length || ll.level || ll.source) break;
+      mx_ += 1;
+    }
+    if(mx_ != mx) setMx(mx_);
+  }, [mx,lines]);
+
+  if(!lines || !lines.length) return (<div></div>);
+
   let prev = <div className={styles.prev}>0 left</div>;
+  let view = lines;
   let start = 0;
-  let lines = orig;
-  if(orig.length > mx) {
-    start = orig.length-mx;
-    lines = orig.slice(start, orig.length);
+  if(lines.length > mx) {
+    const start = lines.length - mx;
+    view = lines.slice(start, lines.length);
     prev = <div className={styles.prevactive} onClick={() => setMx(mx + 50)}>&#8593;...{start} more</div>
   }
 
-  const loglines = parseLog(start, lines, marks, sel);
+  let loglines = parseLog(view, marks, sel);
 
   function mark(ll) {
     const curr = marks[ll.num] || 0;
@@ -82,7 +110,7 @@ function LogViewer({txt}) {
     <>
       <div className={styles.counter}>
         {prev}
-        <div className={styles.count}>{lines.length} shown</div>
+        <div className={styles.count}>{view.length} shown</div>
       </div>
       <div className={styles.logcontainer} onMouseUp={handleSel} onDoubleClick={handleSel}>
       {loglines.map(ll => <LogLine key={ll.num} ll={ll} mark={mark} sel={sel}/>)}
@@ -134,21 +162,15 @@ function LogLine({ll,mark,sel}) {
 
     txt = txt.replace(regex, `<span class="${styles.selected}">$&</span>`);
 
-  return (
-    <div dangerouslySetInnerHTML={{ __html: txt }} />
-  );
-}
+    return (
+      <div dangerouslySetInnerHTML={{ __html: txt }} />
+    );
+  }
 
 
 }
 
-function parseLog(start, lines, marks, sel) {
-  lines = lines.map(l => {
-    return {
-      line_left: l.trim(),
-      curr_chunk: null,
-    }
-  });
+function parseLog(lines, marks, sel) {
   const loglines = [];
   const new_ll_1 = () => {
     return {
@@ -161,7 +183,11 @@ function parseLog(start, lines, marks, sel) {
   }
   let curr = new_ll_1();
 
-  lines.forEach(l => {
+  lines.forEach(line => {
+    const l = {
+      line_left: line.txt,
+      curr_chunk: null,
+    };
     while(true) {
       if(!curr.date) curr.date = get_date_1(l);
       const chunk = get_chunk_1(l);
@@ -182,16 +208,13 @@ function parseLog(start, lines, marks, sel) {
     }
     if(loglines.length == 0 || curr.date || curr.level || curr.sources || curr.meta.length) {
       curr.msg = l.line_left;
+      curr.num = line.num;
+      curr.mark = marks[curr.num];
       loglines.push(curr);
     } else if(l.line_left) {
       loglines[loglines.length - 1].msg += '\n' + l.line_left;
     }
     curr = new_ll_1();
-  });
-
-  loglines.forEach((ll,i) => {
-    ll.num = start + i;
-    ll.mark = marks[ll.num];
   });
 
   return loglines;
