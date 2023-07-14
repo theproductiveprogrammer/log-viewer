@@ -3,12 +3,30 @@ import Head from 'next/head';
 import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] })
 
+import { useRouter } from 'next/router'
+
 import styles from '@/styles/Home.module.css';
 
 import LogViewer from '../components/LogViewer.js';
 
 export default function Home() {
   const [txt, setTxt] = useState("");
+
+  const router = useRouter();
+  const logurl = router.query.l;
+  if(logurl) {
+    fetch(logurl)
+      .then(async res => {
+        if(!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const txt = await res.text();
+        setTxt(txt);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
 
   return (
     <>
