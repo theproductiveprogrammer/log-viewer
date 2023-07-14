@@ -36,9 +36,10 @@ export default function Home() {
 
 function LogViewer({txt}) {
   const [marks, setMarks] = useState({});
+  const [sel, setSel] = useState("");
 
   if(!txt) return (<div></div>);
-  const loglines = parseLog(txt, marks);
+  const loglines = parseLog(txt, marks, sel);
 
   function mark(ll) {
     const curr = marks[ll.num] || 0;
@@ -50,14 +51,19 @@ function LogViewer({txt}) {
     });
   }
 
+  function handleSel() {
+    if(window.getSelection()) setSel(window.getSelection().toString());
+    else setSel("");
+  }
+
   return (
-    <div className={styles.logcontainer}>
-    {loglines.map(ll => <LogLine key={ll.num} ll={ll} mark={mark}/>)}
+    <div className={styles.logcontainer} onMouseUp={handleSel} onDoubleClick={handleSel}>
+    {loglines.map(ll => <LogLine key={ll.num} ll={ll} mark={mark} sel={sel}/>)}
     </div>
   );
 }
 
-function LogLine({ll,mark}) {
+function LogLine({ll,mark,sel}) {
   const markstyle = styles[`mark${(ll.mark || 0) % 3}`];
   const levelstyle = styles[`level-${ll.level}`.toLowerCase()];
   const headercontent = ll.date || ll.level;
@@ -78,7 +84,7 @@ function LogLine({ll,mark}) {
       ) : ""}
 
         <div className={styles.msgcont}>
-          <div className={styles.msg}>{ll.msg}</div>
+          <div className={styles.msg}>{hl(ll.msg)}</div>
         </div>
 
         <div className={styles.metacont}>
@@ -88,6 +94,20 @@ function LogLine({ll,mark}) {
 
 
     </div>
+  );
+
+  function escapeRegex(string) {
+    return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+  }
+
+  function hl(txt) {
+    if(!sel || sel.length < 8) return txt;
+    const regex = new RegExp(escapeRegex(sel), 'gi');
+
+    txt = txt.replace(regex, `<span class="${styles.selected}">$&</span>`);
+
+  return (
+    <div dangerouslySetInnerHTML={{ __html: txt }} />
   );
 }
 
