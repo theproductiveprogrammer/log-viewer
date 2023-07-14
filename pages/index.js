@@ -117,7 +117,7 @@ function LogLine({ll,mark,sel}) {
   }
 
   function hl(txt) {
-    if(!sel || sel.length < 8) return txt;
+    if(!sel || sel.length < 5) return txt;
     const regex = new RegExp(escapeRegex(sel), 'gi');
 
     txt = txt.replace(regex, `<span class="${styles.selected}">$&</span>`);
