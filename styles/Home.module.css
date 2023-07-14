@@ -39,7 +39,10 @@
   font-variant: all-small-caps;
   color: #333;
 }
-.display .log-container {
+.log-container {
   width: 90%;
   margin: 0 auto;
+}
+.log-line {
+  color: #666;
 }
