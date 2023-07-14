@@ -137,7 +137,7 @@
   font-size: 14px;
 }
 .logcontent {
-  width: 100%;
+  width: calc(100% - 32px);
 }
 .selected {
   background: #ccf;
