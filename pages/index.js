@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
@@ -37,9 +37,21 @@ export default function Home() {
 function LogViewer({txt}) {
   const [marks, setMarks] = useState({});
   const [sel, setSel] = useState("");
+  const [mx, setMx] = useState(5);
+
+  function handleScroll() {
+    if(window.innerHeight + document.documentElement.scrollTop + 500 < document.documentElement.offsetHeight) {
+      return;
+    }
+    setMx(mx + 100);
+  }
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [mx]);
 
   if(!txt) return (<div></div>);
-  const loglines = parseLog(txt, marks, sel);
+  const loglines = parseLog(mx, txt, marks, sel);
 
   function mark(ll) {
     const curr = marks[ll.num] || 0;
@@ -111,8 +123,17 @@ function LogLine({ll,mark,sel}) {
   );
 }
 
-function parseLog(txt, marks) {
-  const lines = txt.split(/[\r\n]+/g).map(l => {
+
+}
+
+function parseLog(mx, txt, marks, sel) {
+  let lines = txt.split(/[\r\n]+/g);
+  if(lines.length > mx) {
+    const more_msg = `TRACE LogViewer (${lines.length - mx} more)`;
+    lines = lines.slice(lines.length-mx, lines.length);
+    lines.push(more_msg);
+  }
+  lines = lines.map(l => {
     return {
       line_left: l.trim(),
       curr_chunk: null,
@@ -168,7 +189,7 @@ function parseLog(txt, marks) {
   function get_date_1(l) {
     const l_ = l.line_left;
     let sz = l_.length;
-    while(sz > 0) {
+    while(sz > 8) {
       const dt = getDate(l_.substring(0, sz));
       if(dt) {
         l.curr_chunk = null;
