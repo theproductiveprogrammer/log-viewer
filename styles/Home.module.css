@@ -206,3 +206,14 @@
 .markscopy .mark {
   margin-right: 2px;
 }
+
+.err_stack_block {
+}
+
+.level-error .err_stack_block .err_stack_hl {
+  color: #f44336;
+}
+
+.err_stack_minim {
+  font-size: 0.5em;
+}

@@ -232,14 +232,38 @@ function LogLine({ll,mark,sel}) {
   }
 
   function hl(txt) {
-    if(!sel || sel.length < 5) return txt;
-    const regex = new RegExp(escapeRegex(sel), 'gi');
+    txt = hl_errorstack(txt);
 
-    txt = txt.replace(regex, `<span class="${styles.selected}">$&</span>`);
+    txt = hl_selected(txt);
 
     return (
       <div dangerouslySetInnerHTML={{ __html: txt }} />
     );
+  }
+
+  function hl_errorstack(txt) {
+    if(!ll.level || ll.level.toLowerCase() != "error") return txt;
+    let lines = txt.split(/[\r\n]/g);
+    let found = false;
+    lines = lines.map(l => {
+      if(l.startsWith("at ")) {
+        found = true;
+        return `<span class="${styles.err_stack_minim}">${l}</span>`;
+      } else {
+        return `<span class="${styles.err_stack_hl}">${l}</span>`;
+      }
+    });
+    if(!found) return txt;
+    lines.unshift(`<div class="${styles.err_stack_block}">`)
+    lines.push(`</div>`);
+    return lines.join('\n');
+  }
+
+  function hl_selected(txt) {
+    if(!sel || sel.length < 5) return txt;
+    const regex = new RegExp(escapeRegex(sel), 'gi');
+
+    return txt.replace(regex, `<span class="${styles.selected}">$&</span>`);
   }
 
 
