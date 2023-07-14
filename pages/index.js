@@ -27,11 +27,21 @@ export default function Home() {
         </div>
         <div className={styles.display}>
           <div className={styles.title}>Log Viewer</div>
+          <Search />
+
           <LogViewer txt={txt}/>
         </div>
       </main>
     </>
   )
+}
+
+function Search(props) {
+  return (
+    <div className={styles.searchcont}>
+      <input type="text" />
+    </div>
+  );
 }
 
 function LogViewer({txt}) {
