@@ -12,7 +12,10 @@ export default function Home() {
   const [txt, setTxt] = useState("");
   const [search, setSearch] = useState("");
 
-  const search_rx = search ? new RegExp(search, 'i') : null;
+  let search_rx = null;
+  if(search) {
+    try { search_rx = new RegExp(search, 'i'); } catch(e) { /* ignore */ }
+  }
 
   const lines = txt ? txt.split(/[\r\n]+/g).map((txt,i) => {
     txt = txt.trim();
