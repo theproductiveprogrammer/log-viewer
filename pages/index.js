@@ -4,6 +4,8 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 
+import { DateTime } from 'luxon';
+
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
@@ -121,13 +123,27 @@ function parseLog(txt, marks) {
     const l_ = l.line_left;
     let sz = l_.length;
     while(sz > 0) {
-      const dt = new Date(l_.substring(0, sz));
-      if(!isNaN(dt.getTime())) {
+      const dt = getDate(l_.substring(0, sz));
+      if(dt) {
         l.curr_chunk = null;
         l.line_left = l.line_left.substring(sz).trim();
         return dt;
       }
       sz--;
+    }
+  }
+
+  function getDate(s) {
+    const converters = [
+      DateTime.fromISO,
+      DateTime.fromRFC2822,
+      DateTime.fromHTTP,
+      DateTime.fromSQL,
+    ];
+
+    for(let i = 0;i < converters.length;i++) {
+      const dt = converters[i](s);
+      if(!dt.invalid) return dt;
     }
   }
 
