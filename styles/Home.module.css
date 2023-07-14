@@ -142,3 +142,15 @@
 .selected {
   background: #ccf;
 }
+
+.counter {
+  font-size: 0.7em;
+  text-align: right;
+  color: #8b63cf;
+}
+.prevactive {
+  cursor: pointer;
+}
+.prevactive:hover {
+  text-decoration: underline;
+}
