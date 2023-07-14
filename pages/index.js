@@ -138,10 +138,36 @@ function LogViewer({lines}) {
         {prev}
         <div className={styles.count}>{view.length} shown</div>
       </div>
+      <Marks marks={marks} />
       <div className={styles.logcontainer} onMouseUp={handleSel} onDoubleClick={handleSel}>
       {loglines.map(ll => <LogLine key={ll.num} ll={ll} mark={mark} sel={sel}/>)}
       </div>
     </>
+  );
+}
+
+function Marks({marks}) {
+  const types = {};
+  for(let k in marks) {
+    const curr = types[marks[k]] || 0;
+    types[marks[k]] = curr + 1;
+  }
+
+  const show = []
+  for(let k in types) {
+    if(!(k%3)) continue;
+    const markstyle = styles[`mark${k % 3}`] || "";
+    show.push((
+      <div key={k} className={`${styles.markscopy} ${markstyle}`}>
+        <div key={k} className={styles.mark}></div><div>{types[k]}</div>
+      </div>
+    ));
+  }
+
+  return (
+    <div className={styles.markscopycont}>
+    {show}
+    </div>
   );
 }
 
