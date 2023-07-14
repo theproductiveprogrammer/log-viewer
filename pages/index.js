@@ -235,11 +235,14 @@ function parseLog(lines, marks, sel) {
       curr.msg = l.line_left;
       curr.num = line.num;
       curr.mark = marks[curr.num];
-      if(line.search_match) curr.search_match = true;
+      if(line.search_match === true) curr.search_match = true;
+      if(line.search_match === false && !curr.search_match) curr.search_match = false;
       loglines.push(curr);
     } else if(l.line_left) {
       const prev = loglines[loglines.length - 1];
       if(line.search_match) prev.search_match = true;
+      if(line.search_match === true) prev.search_match = true;
+      if(line.search_match === false && !prev.search_match) prev.search_match = false;
       prev.msg += '\n' + l.line_left;
     }
     curr = new_ll_1();
