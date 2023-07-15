@@ -33,3 +33,13 @@
   background: white;
   padding: 2em;
 }
+
+.plain {
+  padding: 2em;
+}
+.plainentry {
+  width: 100%;
+  outline: none;
+  border: 1px solid #ccc;
+  color: #aaa;
+}

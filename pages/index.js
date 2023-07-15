@@ -11,6 +11,7 @@ import LogViewer from '../components/LogViewer.js';
 
 export default function Home() {
   const [txt, setTxt] = useState("");
+  const [plain, setPlain] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -28,7 +29,18 @@ export default function Home() {
           console.error(err);
         });
     }
+
+    const isplain = router.query.q;
+    if(isplain) setPlain(true);
+
   }, [router]);
+
+  if(plain) return (
+      <main className={`${styles.plain} ${inter.className}`}>
+        <LogViewer title="Log Viewer" txt={txt}/>
+        <textarea className={styles.plainentry} value={txt} onChange={e => setTxt(e.target.value)}></textarea>
+      </main>
+  );
 
   return (
     <>
