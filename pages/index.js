@@ -12,13 +12,16 @@ import LogViewer from '../components/LogViewer.js';
 export default function Home() {
   const [txt, setTxt] = useState("");
   const [plain, setPlain] = useState(true);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const logurl = router.query.l;
     if(logurl) {
+      setLoading(true);
       fetch(logurl)
         .then(async res => {
+          setLoading(false);
           if(!res.ok) {
             throw new Error("Network response was not ok");
           }
@@ -26,6 +29,7 @@ export default function Home() {
           setTxt(txt);
         })
         .catch(err => {
+          setLoading(false);
           console.error(err);
         });
     }
@@ -35,6 +39,8 @@ export default function Home() {
     else setPlain(false);
 
   }, [router]);
+
+  if(loading) return "Loading...";
 
   if(plain) return (
       <main className={`${styles.plain} ${inter.className}`}>
