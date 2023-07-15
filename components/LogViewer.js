@@ -270,7 +270,8 @@ function LogLine({ll,mark,sel}) {
   }
 
   function hl_errorstack(txt) {
-    if(!ll.level || ll.level.toLowerCase() != "error") return txt;
+    if(!ll.level) return txt;
+    if(ll.level.toLowerCase() != "error" && ll.level.toLowerCase() != "warn") return txt;
     let lines = txt.split(/[\r\n]/g);
     let found = false;
     lines = lines.map(l => {
