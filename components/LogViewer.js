@@ -325,11 +325,12 @@ function parseLog(lines, marks, sel) {
     while(true) {
       if(!curr.date) curr.date = get_date_1(l);
       const chunk = get_chunk_1(l);
-      if(!chunk) {
+      if(!chunk && !l.line_left) {
         l.line_left = curr.meta.join(" ");
         curr.meta = [];
         break;
       }
+      if(!chunk) continue;
       if(curr.level) {
         curr.source = chunk;
         break;
