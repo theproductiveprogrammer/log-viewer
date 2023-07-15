@@ -31,13 +31,28 @@ export default function ({title, txt}) {
   return (
     <>
       <div className={styles.title}>{title}</div>
-      <Search search={search} setSearch={setSearch}/>
+      <Search lines={lines} search={search} setSearch={setSearch}/>
       <Viewer lines={lines}/>
     </>
   );
 }
 
-function Search({search, setSearch}) {
+function Search({lines, search, setSearch}) {
+
+  let search_results = 0;
+  lines && lines.forEach(line => {
+    if(line.search_match) search_results++;
+  });
+
+  function copySearch() {
+    if(!lines) return;
+    const results = lines.filter(line => line.search_match).map(line => line.txt);
+    if(!results.length) return;
+    navigator.clipboard.writeText(results.join("\n"))
+    .then(() => alert('copied to clipboard'))
+    .catch(err => console.error(err));
+  }
+
   return (
     <div className={styles.searchcont}>
       <input
@@ -46,6 +61,12 @@ function Search({search, setSearch}) {
         className={styles.search}
         type="text"
         placeholder="/search" />
+      {search ? (
+        <div className={styles.srcont}>
+          <div className={styles.srcopy} onClick={copySearch}>&#128269; {search_results}</div>
+          <div className={styles.srclear} onClick={() => setSearch("")}>&#9447;</div>
+        </div>
+      ) : ""}
     </div>
   );
 }
