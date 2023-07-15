@@ -3,7 +3,7 @@ import styles from '@/styles/LogViewer.module.css'
 
 import { DateTime } from 'luxon';
 
-export default function ({title, txt}) {
+export default function LogViewer({title, txt}) {
   const [search, setSearch] = useState("");
 
   let search_rx = null;
