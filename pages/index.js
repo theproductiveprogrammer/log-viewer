@@ -11,7 +11,7 @@ import LogViewer from '../components/LogViewer.js';
 
 export default function Home() {
   const [txt, setTxt] = useState("");
-  const [plain, setPlain] = useState(false);
+  const [plain, setPlain] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,6 +32,7 @@ export default function Home() {
 
     const isplain = router.query.q;
     if(isplain) setPlain(true);
+    else setPlain(false);
 
   }, [router]);
 
