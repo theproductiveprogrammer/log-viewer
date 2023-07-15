@@ -21,11 +21,12 @@ export default function Home() {
       setLoading(true);
       fetch(logurl)
         .then(async res => {
-          setLoading(false);
           if(!res.ok) {
+            setLoading(false);
             throw new Error("Network response was not ok");
           }
           const txt = await res.text();
+          setLoading(false);
           setTxt(txt);
         })
         .catch(err => {
