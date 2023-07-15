@@ -332,7 +332,7 @@ function parseLog(lines, marks, sel) {
       }
       if(!chunk) continue;
       if(curr.level) {
-        curr.source = chunk;
+        if(l.sep) curr.source = chunk;
         break;
       }
       if(/^(INFO|DEBUG|TRACE|WARN|ERROR)$/.test(chunk)) {
@@ -391,6 +391,7 @@ function parseLog(lines, marks, sel) {
   }
 
   function get_chunk_1(l) {
+    l.sep = null;
     if(!l.line_left) return null;
 
     let rx = /^\s*\[/
@@ -399,6 +400,7 @@ function parseLog(lines, marks, sel) {
       const ndx = l.line_left.indexOf(']');
       l.curr_chunk = l.line_left.substring(m[0].length, ndx).trim();
       l.line_left = l.line_left.substring(ndx+1).trim();
+      l.sep = '[]';
       return l.curr_chunk;
     }
 
@@ -409,7 +411,9 @@ function parseLog(lines, marks, sel) {
       l.line_left = "";
     } else {
       l.curr_chunk = l.line_left.substring(0, m.index);
-      l.line_left = l.line_left.substring(m.index + m[0].length);
+      const sep = m[0];
+      if(sep.length == 1 && sep != " " && sep != "\t") l.sep = sep;
+      l.line_left = l.line_left.substring(m.index + sep.length);
     }
     return l.curr_chunk;
   }
