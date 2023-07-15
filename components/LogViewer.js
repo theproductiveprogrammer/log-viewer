@@ -37,6 +37,34 @@ export default function LogViewer({title, txt}) {
   );
 }
 
+// from: https://stackoverflow.com/questions/51805395/navigator-clipboard-is-undefined
+async function copyToClipboard(textToCopy) {
+    // Navigator clipboard api needs a secure context (https)
+    if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(textToCopy);
+    } else {
+        // Use the 'out of viewport hidden text area' trick
+        const textArea = document.createElement("textarea");
+        textArea.value = textToCopy;
+
+        // Move textarea out of the viewport so it's not visible
+        textArea.style.position = "absolute";
+        textArea.style.left = "-999999px";
+
+        document.body.prepend(textArea);
+        textArea.select();
+
+        try {
+            document.execCommand('copy');
+        } catch (error) {
+            console.error(error);
+        } finally {
+            textArea.remove();
+        }
+    }
+}
+
+
 function Search({lines, search, setSearch}) {
 
   let search_results = 0;
@@ -48,7 +76,7 @@ function Search({lines, search, setSearch}) {
     if(!lines) return;
     const results = lines.filter(line => line.search_match).map(line => line.txt);
     if(!results.length) return;
-    navigator.clipboard.writeText(results.join("\n"))
+    copyToClipboard(results.join("\n"))
     .then(() => alert('copied to clipboard'))
     .catch(err => console.error(err));
   }
@@ -168,7 +196,7 @@ function Marks({loglines, marks}) {
       if(ll) marked.push(ll.txt);
     }
     if(marked.length == 0) return;
-    navigator.clipboard.writeText(marked.join("\n"))
+    copyToClipboard(marked.join("\n"))
     .then(() => alert('copied to clipboard'))
     .catch(err => console.error(err));
   }
