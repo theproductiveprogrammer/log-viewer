@@ -413,7 +413,7 @@ function parseLog(lines, marks, sel) {
     } else {
       l.curr_chunk = l.line_left.substring(0, m.index);
       const sep = m[0].trim();
-      if(sep.length > 1) l.sep = sep;
+      if(sep.length) l.sep = sep;
       l.line_left = l.line_left.substring(m.index + m[0].length);
     }
     return l.curr_chunk;
