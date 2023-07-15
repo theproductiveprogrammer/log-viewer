@@ -40,7 +40,7 @@ export default function Home() {
 
   }, [router]);
 
-  if(loading) return "Loading...";
+  if(loading) return <div class={styles.loading}>Loading...</div>;
 
   if(plain) return (
       <main className={`${styles.plain} ${inter.className}`}>
