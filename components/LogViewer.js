@@ -254,7 +254,7 @@ function LogLine({ll,mark,sel}) {
         <div className={styles.msgcont}>
           <div className={styles.msg}>{hl(ll.msg)}</div>
           {ll.json ? (
-            <JsonView data={ll.json} shouldInitiallyExpand={level => level < 2} style={jsonStyle} />
+            <JsonView data={ll.json} shouldInitiallyExpand={level => level < 1} style={jsonStyle} />
           ): ""}
         </div>
 
