@@ -387,6 +387,7 @@ function parseLog(lines, marks, sel) {
         } catch(e) { /* */ }
       }
     }
+    logline_from_json(curr);
     curr.msg = l.line_left;
     return curr;
   }
@@ -407,6 +408,16 @@ function parseLog(lines, marks, sel) {
   }
 
   function getDate(s) {
+    if(typeof s === "number") {
+      let dt = DateTime.fromMillis(s);
+      if(dt && !dt.invalid) return dt;
+      dt = DateTime.fromSeconds(s);
+      if(dt && !dt.invalid) return dt;
+      return;
+    }
+
+    if(typeof s !== "string") return;
+
     const converters = [
       DateTime.fromISO,
       DateTime.fromRFC2822,
@@ -449,7 +460,20 @@ function parseLog(lines, marks, sel) {
   }
 
   function logline_from_json(curr) {
-    // TODO: extract values (date/message/level) from JSON
+    const j = curr.json;
+    if(!j) return;
+
+    if(!curr.date && j.timestamp) curr.date = getDate(j.timestamp);
+    if(!curr.date && j.ts) curr.date = getDate(j.ts);
+    if(!curr.date && j.tm) curr.date = getDate(j.tm);
+    if(!curr.date && j.date) curr.date = getDate(j.date);
+    if(!curr.date && j.datetime) curr.date = getDate(j.datetime);
+
+    if(!curr.level && j.level) curr.level = j.level;
+    if(!curr.level && j.error) curr.level = "ERROR";
+
+    if(!curr.source && j.source) curr.source = j.source;
+
   }
 
 }
