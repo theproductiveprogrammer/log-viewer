@@ -336,7 +336,7 @@ function parseLog(lines, marks, sel) {
   function line2Logline(line) {
     const curr = {
       json: null,
-      txt: null,
+      txt: line.txt,
       meta: [],
       date: null,
       level: null,
