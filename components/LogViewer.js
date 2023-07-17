@@ -315,7 +315,7 @@ function parseLog(lines, marks, sel) {
   lines.forEach(line => {
     const curr = line2Logline(line);
 
-    if(loglines.length == 0 || curr.date || curr.level || curr.sources || curr.meta.length) {
+    if(loglines.length == 0 || curr.json || curr.date || curr.level || curr.sources || curr.meta.length) {
       curr.num = line.num;
       curr.mark = marks[curr.num];
       if(line.search_match === true) curr.search_match = true;
