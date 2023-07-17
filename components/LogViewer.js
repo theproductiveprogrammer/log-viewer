@@ -156,10 +156,11 @@ export function Viewer({lines}) {
 
   function mark(ll) {
     const curr = marks[ll.num] || 0;
+    const num = (curr + 1) % 3;
     setMarks(prev => {
       return {
         ...prev,
-        [ll.num]: curr + 1,
+        [ll.num]: num,
       };
     });
   }
@@ -212,8 +213,8 @@ function Marks({loglines, marks}) {
 
   const show = []
   for(let k in types) {
-    if(!(k%3)) continue;
-    const markstyle = styles[`mark${k % 3}`] || "";
+    if(!k || k == '0') continue;
+    const markstyle = styles[`mark${k}`] || "";
     show.push((
       <div key={k} className={`${styles.markscopy} ${markstyle}`} onClick={() => copyMarks(k)}>
         <div key={k} className={styles.mark}></div><div>{types[k]}</div>
@@ -224,12 +225,13 @@ function Marks({loglines, marks}) {
   return (
     <div className={styles.markscopycont}>
     {show}
+    &nbsp;
     </div>
   );
 }
 
 function LogLine({ll,mark,sel}) {
-  const markstyle = styles[`mark${(ll.mark || 0) % 3}`] || "";
+  const markstyle = styles[`mark${ll.mark || 0}`] || "";
   const levelstyle = styles[`level-${ll.level}`.toLowerCase()] || "";
   let searchstyle = "";
   if(ll.search_match === false) searchstyle = styles.search_result_fail;
