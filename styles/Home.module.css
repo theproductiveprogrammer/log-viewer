@@ -30,7 +30,6 @@
 .display {
   position: relative;
   width: 79%;
-  background: white;
   padding: 2em;
 }
 
@@ -54,3 +53,9 @@
   color: #aaa;
 }
 
+@media (prefers-color-scheme: dark) {
+  .display {
+    background: #1e1e1e;
+    background: #161616;
+  }
+}

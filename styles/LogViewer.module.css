@@ -16,7 +16,7 @@
   justify-content: flex-start;
   align-items: flex-start;
   position: relative;
-  color: #666;
+  color: #444;
   margin-top: 1em;
   padding-top: 0.5em;
 
@@ -212,4 +212,22 @@
 }
 .json_nullValue {
   color: #2196f3;
+}
+
+@media (prefers-color-scheme: dark) {
+  .json_container {
+    background: #0e0e0e;
+  }
+  .logline {
+    color: #DCDBD2;
+  }
+  .selected {
+    background: #6c6cff;
+  }
+  .level-error .err_stack_block .err_stack_hl {
+    color: #c9655e
+  }
+  .search_result_fail {
+    opacity: 0.3;
+  }
 }
