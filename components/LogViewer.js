@@ -2,6 +2,15 @@ import { useState, useEffect } from 'react';
 import styles from '@/styles/LogViewer.module.css'
 
 import { DateTime } from 'luxon';
+import { JsonView, defaultStyles } from 'react-json-view-lite';
+import 'react-json-view-lite/dist/index.css';
+
+const jsonStyle = Object.assign({}, defaultStyles, {
+  container: styles.json_container,
+  label: styles.json_label,
+  nullValue: styles.json_nullValue,
+  stringValue: styles.json_stringValue,
+});
 
 export default function LogViewer({title, txt}) {
   const [search, setSearch] = useState("");
@@ -244,6 +253,9 @@ function LogLine({ll,mark,sel}) {
 
         <div className={styles.msgcont}>
           <div className={styles.msg}>{hl(ll.msg)}</div>
+          {ll.json ? (
+            <JsonView data={ll.json} shouldInitiallyExpand={level => level < 2} style={jsonStyle} />
+          ): ""}
         </div>
 
         <div className={styles.metacont}>
@@ -300,8 +312,30 @@ function LogLine({ll,mark,sel}) {
 
 function parseLog(lines, marks, sel) {
   const loglines = [];
-  const new_ll_1 = () => {
-    return {
+  lines.forEach(line => {
+    const curr = line2Logline(line);
+
+    if(loglines.length == 0 || curr.date || curr.level || curr.sources || curr.meta.length) {
+      curr.num = line.num;
+      curr.mark = marks[curr.num];
+      if(line.search_match === true) curr.search_match = true;
+      if(line.search_match === false && !curr.search_match) curr.search_match = false;
+      loglines.push(curr);
+    } else if(curr.msg) {
+      const prev = loglines[loglines.length - 1];
+      if(line.search_match) prev.search_match = true;
+      if(line.search_match === true) prev.search_match = true;
+      if(line.search_match === false && !prev.search_match) prev.search_match = false;
+      prev.msg += '\n' + curr.msg;
+      prev.txt += '\n' + curr.txt;
+    }
+  });
+
+  return loglines;
+
+  function line2Logline(line) {
+    const curr = {
+      json: null,
       txt: null,
       meta: [],
       date: null,
@@ -311,18 +345,19 @@ function parseLog(lines, marks, sel) {
       num: null,
       search_match: null,
     };
-  }
-  let curr = new_ll_1();
-
-  lines.forEach(line => {
-    if(!curr.txt) curr.txt = line.txt;
-    else curr.txt += '\n' + line.txt;
 
     const l = {
       line_left: line.txt,
       curr_chunk: null,
     };
     while(true) {
+      if(l.line_left.startsWith("{")) {
+        try {
+          curr.json = JSON.parse(l.line_left);
+          l.line_left = null;
+          break;
+        } catch(e) { /* */ }
+      }
       if(!curr.date) curr.date = get_date_1(l);
       const chunk = get_chunk_1(l);
       if(!chunk && !l.line_left) {
@@ -342,25 +377,19 @@ function parseLog(lines, marks, sel) {
       }
       curr.meta.push(chunk);
     }
-    if(loglines.length == 0 || curr.date || curr.level || curr.sources || curr.meta.length) {
-      curr.msg = l.line_left;
-      curr.num = line.num;
-      curr.mark = marks[curr.num];
-      if(line.search_match === true) curr.search_match = true;
-      if(line.search_match === false && !curr.search_match) curr.search_match = false;
-      loglines.push(curr);
-    } else if(l.line_left) {
-      const prev = loglines[loglines.length - 1];
-      if(line.search_match) prev.search_match = true;
-      if(line.search_match === true) prev.search_match = true;
-      if(line.search_match === false && !prev.search_match) prev.search_match = false;
-      prev.msg += '\n' + l.line_left;
-      prev.txt += '\n' + curr.txt;
+    if(!curr.json) {
+      const possibleJsonIndex = l.line_left ? l.line_left.indexOf("{") : -1;
+      if(possibleJsonIndex > -1) {
+        try {
+          const possibleJson = l.line_left.substring(possibleJsonIndex).trim();
+          curr.json = JSON.parse(possibleJson);
+          l.line_left = l.line_left.substring(0, possibleJsonIndex);
+        } catch(e) { /* */ }
+      }
     }
-    curr = new_ll_1();
-  });
-
-  return loglines;
+    curr.msg = l.line_left;
+    return curr;
+  }
 
   function get_date_1(l) {
     const l_ = l.line_left;
@@ -418,4 +447,9 @@ function parseLog(lines, marks, sel) {
     }
     return l.curr_chunk;
   }
+
+  function logline_from_json(curr) {
+    // TODO: extract values (date/message/level) from JSON
+  }
+
 }
