@@ -301,7 +301,7 @@ function LogLine({ll,mark,sel}) {
     let lines = txt.split(/[\r\n]/g);
     let found = false;
     lines = lines.map(l => {
-      if(l.startsWith("at ")) {
+      if(l.trim().startsWith("at ")) {
         found = true;
         return `<span class="${styles.err_stack_minim}">${l}</span>`;
       } else {
