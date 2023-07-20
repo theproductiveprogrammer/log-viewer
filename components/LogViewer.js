@@ -382,7 +382,7 @@ function parseLog(lines, marks, sel) {
       if(!chunk) continue;
       if(curr.level) {
         if(l.sep) curr.source = chunk;
-        l.line_left = chunk + " " + l.line_left;
+        else l.line_left = chunk + " " + l.line_left;
         break;
       }
       if(/^(INFO|DEBUG|TRACE|WARN|ERROR)$/.test(chunk)) {
