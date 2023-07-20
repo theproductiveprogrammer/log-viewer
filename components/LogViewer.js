@@ -409,6 +409,8 @@ function parseLog(lines, marks, sel) {
   function get_date_1(l) {
     const l_ = l.line_left;
     let sz = l_.length;
+    const m = l.line_left.match(/[\r\n]/);
+    if(m) sz = m.index;
     if(sz > 35) sz = 35
     while(sz > 8) {
       const dt = getDate(l_.substring(0, sz));
