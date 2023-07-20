@@ -448,6 +448,11 @@ function parseLog(lines, marks, sel) {
   function get_chunk_1(l) {
     l.sep = null;
     if(!l.line_left) return null;
+    if(l.line_left.startsWith("\n") || l.line_left.startsWith("\r")) {
+      l.curr_chunk = l.line_left;
+      l.line_left = "";
+      return l.curr_chunk;
+    }
 
     let rx = /^\s*\[/
     let m = l.line_left.match(rx);
