@@ -23,19 +23,12 @@ export default function LogViewer({title, txt}) {
     }
   }
 
-  const lines = txt ? txt.split(/[\r\n]+/g).map((txt,i) => {
-    txt = txt.trim();
-    if(!txt) return null;
-
-    const search_match = search_rx ? txt.search(search_rx) != -1 : null;
-
-    return {
-      txt,
-      num: i+1,
-      search_match,
-    }
-  }).filter(l => l) : null;
-
+  const lines = txtToLines(txt);
+  if(lines) {
+    lines.forEach(line => {
+      line.search_match = search_rx ? line.search(search_rx) != -1 : null;
+    });
+  }
 
   return (
     <>
@@ -44,6 +37,25 @@ export default function LogViewer({title, txt}) {
       <Viewer lines={lines}/>
     </>
   );
+}
+
+function txtToLines(txt) {
+  if(!txt) return null;
+  txt = txt.split(/[\r\n]+/g)
+  const lines = [];
+  for(let i = 0;i < txt.length;i++) {
+    const c = txt[i];
+    if(!c) continue;
+    if(lines.length && (c.length < 8 || c.startsWith(" ") || c.startsWith("\t") || c == "}")) {
+      lines[lines.length-1].txt += "\n" + c;
+    } else {
+      lines.push({
+        txt: c,
+        num: i + 1,
+      });
+    }
+  }
+  return lines;
 }
 
 // from: https://stackoverflow.com/questions/51805395/navigator-clipboard-is-undefined
