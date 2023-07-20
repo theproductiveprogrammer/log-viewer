@@ -460,10 +460,12 @@ function parseLog(lines, marks, sel) {
     let m = l.line_left.match(rx);
     if(m) {
       const ndx = l.line_left.indexOf(']');
-      l.curr_chunk = l.line_left.substring(m[0].length, ndx).trim();
-      l.line_left = l.line_left.substring(ndx+1).trim();
-      l.sep = '[]';
-      return l.curr_chunk;
+      if(ndx != -1) {
+        l.curr_chunk = l.line_left.substring(m[0].length, ndx).trim();
+        l.line_left = l.line_left.substring(ndx+1).trim();
+        l.sep = '[]';
+        return l.curr_chunk;
+      }
     }
 
     rx = /[ \t:-]+/;
