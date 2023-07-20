@@ -454,7 +454,7 @@ function parseLog(lines, marks, sel) {
       return l.curr_chunk;
     }
 
-    let rx = /^\s*\[/
+    let rx = /^[ \t]*\[/
     let m = l.line_left.match(rx);
     if(m) {
       const ndx = l.line_left.indexOf(']');
@@ -464,7 +464,7 @@ function parseLog(lines, marks, sel) {
       return l.curr_chunk;
     }
 
-    rx = /[\s:-]+/;
+    rx = /[ \t:-]+/;
     m = l.line_left.match(rx);
     if(!m) {
       l.curr_chunk = l.line_left;
