@@ -26,7 +26,7 @@ export default function LogViewer({title, txt}) {
   const lines = txtToLines(txt);
   if(lines) {
     lines.forEach(line => {
-      line.search_match = search_rx ? line.search(search_rx) != -1 : null;
+      line.search_match = (search_rx && line.txt) ? line.txt.search(search_rx) != -1 : null;
     });
   }
 
