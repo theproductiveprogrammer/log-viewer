@@ -286,6 +286,8 @@ function LogLine({ll,mark,sel}) {
   }
 
   function hl(txt) {
+    if(!txt) return;
+
     txt = hl_errorstack(txt);
 
     txt = hl_selected(txt);
