@@ -11,6 +11,7 @@ import LogViewer from '../components/LogViewer.js';
 
 export default function Home() {
   const [txt, setTxt] = useState("");
+  const [canRefresh, setRefresh] = useState(false);
   const [plain, setPlain] = useState(true);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -28,6 +29,7 @@ export default function Home() {
           const txt = await res.text();
           setLoading(false);
           setTxt(txt);
+          setRefresh(true);
         })
         .catch(err => {
           setLoading(false);
@@ -43,9 +45,11 @@ export default function Home() {
 
   if(loading) return <div className={styles.loading}>Loading...</div>;
 
+  const refresh = () => router.reload();
+
   if(plain) return (
       <main className={`${styles.plain} ${inter.className}`}>
-        <LogViewer title="Log Viewer" txt={txt}/>
+        <LogViewer title="Log Viewer" refresh={refresh} txt={txt}/>
         <textarea className={styles.plainentry} value={txt} onChange={e => setTxt(e.target.value)}></textarea>
       </main>
   );

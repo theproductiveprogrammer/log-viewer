@@ -70,6 +70,16 @@
   color: red;
 }
 
+.refreshbtn {
+  font-size: 0.7em;
+  font-weight: 400;
+  cursor: pointer;
+  color: #2196f3;
+}
+.refreshbtn:hover {
+  color: #c9655e;
+  text-decoration: underline;
+}
 
 .metacont {
   position: absolute;

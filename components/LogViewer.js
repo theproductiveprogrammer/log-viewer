@@ -12,7 +12,7 @@ const jsonStyle = Object.assign({}, defaultStyles, {
   stringValue: styles.json_stringValue,
 });
 
-export default function LogViewer({title, txt}) {
+export default function LogViewer({title, txt, refresh}) {
   const [search, setSearch] = useState("");
 
   let search_rx = null;
@@ -34,7 +34,7 @@ export default function LogViewer({title, txt}) {
     <>
       <div className={styles.title}>{title}</div>
       <Search lines={lines} search={search} setSearch={setSearch}/>
-      <Viewer lines={lines}/>
+      <Viewer lines={lines} refresh={refresh}/>
     </>
   );
 }
@@ -120,7 +120,7 @@ function Search({lines, search, setSearch}) {
   );
 }
 
-export function Viewer({lines}) {
+export function Viewer({lines, refresh}) {
   const [marks, setMarks] = useState({});
   const [sel, setSel] = useState("");
   const [mx, setMx] = useState(100);
@@ -184,6 +184,7 @@ export function Viewer({lines}) {
 
   return (
     <>
+      {refresh ? <div className={styles.refreshbtn} onClick={refresh}>Refresh</div> : ""}
       <div className={styles.counter}>
         {prev}
         <div className={styles.count}>{view.length} shown</div>
