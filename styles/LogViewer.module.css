@@ -196,6 +196,30 @@
 .srclear {
   cursor: pointer;
 }
+.filter_bar {
+  display: flex;
+  flex-direction: row;
+  margin-top: 2px;
+}
+.filter_in {
+  cursor: pointer;
+  font-size: 1.2em;
+  line-height: 1.2em;
+  margin-right: 0.4em;
+}
+.filter_out {
+  cursor: pointer;
+  font-size: 1.2em;
+  line-height: 1.2em;
+  margin-right: 0.4em;
+}
+.filter_pop {
+  cursor: pointer;
+  font-size: 1.4em;
+  position: relative;
+  top: -2px;
+}
+.disabled { opacity: 0.2; }
 
 .err_stack_block {
 }

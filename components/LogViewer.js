@@ -12,18 +12,34 @@ const jsonStyle = Object.assign({}, defaultStyles, {
   stringValue: styles.json_stringValue,
 });
 
+function srx(search) {
+  if(!search) return null;
+  try { return new RegExp(search, 'i'); } catch(e) { /* ignore */ }
+  try { return new RegExp(escapeRegex(search), 'i'); } catch(e) { /* ignore */ }
+  return null;
+}
+
+function filter(filters, lines) {
+  if(!lines || !lines.length || !filters || !filters.length) return lines;
+  let ret = [];
+  filters.forEach(f => {
+    if(f.t === '+') {
+      ret = lines.filter(line => line.txt.search(f.s) != -1);
+    } else {
+      ret = lines.filter(line => line.txt.search(f.s) == -1);
+    }
+    lines = ret;
+  });
+  return ret;
+}
+
 export default function LogViewer({title, txt, refresh}) {
   const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState([]);
 
-  let search_rx = null;
-  if(search) {
-    try { search_rx = new RegExp(search, 'i'); } catch(e) { /* ignore */ }
-    if(!search_rx) {
-      try { search_rx = new RegExp(escapeRegex(search), 'i'); } catch(e) { /* ignore */ }
-    }
-  }
+  const search_rx = srx(search);
 
-  const lines = txtToLines(txt);
+  const lines = filter(filters, txtToLines(txt));
   if(lines) {
     lines.forEach(line => {
       line.search_match = (search_rx && line.txt) ? line.txt.search(search_rx) != -1 : null;
@@ -33,7 +49,7 @@ export default function LogViewer({title, txt, refresh}) {
   return (
     <>
       <div className={styles.title}>{title}</div>
-      <Search lines={lines} search={search} setSearch={setSearch}/>
+      <Search lines={lines} search={search} setSearch={setSearch} filters={filters} setFilters={setFilters}/>
       <Viewer lines={lines} refresh={refresh}/>
     </>
   );
@@ -86,20 +102,40 @@ async function copyToClipboard(textToCopy) {
 }
 
 
-function Search({lines, search, setSearch}) {
+function Search({lines, search, setSearch, filters, setFilters}) {
 
   let search_results = 0;
   lines && lines.forEach(line => {
     if(line.search_match) search_results++;
   });
+  if(!search_results) search_results = "";
+
+  const srch_class = search ? styles.enabled : styles.disabled;
+  const filter_class = filters && filters.length ? styles.enabled : styles.disabled;
 
   function copySearch() {
+    if(!search) return;
     if(!lines) return;
     const results = lines.filter(line => line.search_match).map(line => line.txt);
     if(!results.length) return;
     copyToClipboard(results.join("\n"))
     .then(() => alert('copied to clipboard'))
     .catch(err => console.error(err));
+  }
+
+  function filterIn() {
+    if(!search) return;
+    setFilters(prev => prev.concat({t:'+',s:srx(search)}));
+    setSearch("");
+  }
+  function filterOut() {
+    if(!search) return;
+    setFilters(prev => prev.concat({t:'-',s:srx(search)}));
+    setSearch("");
+  }
+  function filterPop() {
+    setFilters(prev => prev.slice(0, -1));
+    setSearch("");
   }
 
   return (
@@ -110,12 +146,15 @@ function Search({lines, search, setSearch}) {
         className={styles.search}
         type="text"
         placeholder="/search" />
-      {search ? (
         <div className={styles.srcont}>
-          <div className={styles.srcopy} onClick={copySearch}>&#128269; {search_results}</div>
+          <div className={`${styles.srcopy} ${srch_class}`} onClick={copySearch}>&#128269; {search_results}</div>
+          <div className={styles.filter_bar}>
+            <div className={`${styles.filter_in} ${srch_class}`} onClick={filterIn}>&#x2713;</div>
+            <div className={`${styles.filter_out} ${srch_class}`} onClick={filterOut}>&#120273;</div>
+            <div className={`${styles.filter_pop} ${filter_class}`} onClick={filterPop}>&#10226;</div>
+          </div>
           <div className={styles.srclear} onClick={() => setSearch("")}>&#9447;</div>
         </div>
-      ) : ""}
     </div>
   );
 }
