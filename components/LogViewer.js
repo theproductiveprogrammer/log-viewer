@@ -62,8 +62,14 @@ function txtToLines(txt) {
   for(let i = 0;i < txt.length;i++) {
     const c = txt[i];
     if(!c) continue;
-    if(lines.length && (c.length < 8 || c.startsWith(" ") || c.startsWith("\t") || c == "}")) {
-      lines[lines.length-1].txt += "\n" + c;
+    if(lines.length && is_probably_attached_to_previous_line(c)) {
+      const last_ = lines[lines.length-1].txt;
+      if(looks_like_start_of_exception_1(last_) && lines.length > 1) {
+        const ex = lines.pop().txt + "\n" + c;
+        lines[lines.length-1].txt += "\n" + ex;
+      } else {
+        lines[lines.length-1].txt += "\n" + c;
+      }
     } else {
       lines.push({
         txt: c,
@@ -72,6 +78,18 @@ function txtToLines(txt) {
     }
   }
   return lines;
+
+  function is_probably_attached_to_previous_line(txt) {
+    return txt.length < 8 || txt.startsWith(" ") || txt.startsWith("\t");
+  }
+
+  function looks_like_start_of_exception_1(txt) {
+    if(!txt) return false;
+    if(is_probably_attached_to_previous_line(txt)) return false;
+    if(txt.indexOf('\n') !== -1) return false;
+    if(txt.search(/exception|error/i) === -1) return false;
+    return true;
+  }
 }
 
 // from: https://stackoverflow.com/questions/51805395/navigator-clipboard-is-undefined
