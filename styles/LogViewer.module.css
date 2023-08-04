@@ -44,11 +44,11 @@
   cursor: pointer;
   background: #ccc;
 }
-.mark1 .mark { background: #f44336; }
-.mark2 .mark { background: #2196f3; }
+.mark2 .mark { background: #f44336; }
+.mark1 .mark { background: #2196f3; }
 .mark3 .mark { background: #3f51b5; }
-.logline.mark1 { background: rgb(244 67 54 / 7%); }
-.logline.mark2 { background: rgb(33 150 243 / 10%); }
+.logline.mark2 { background: rgb(244 67 54 / 7%); }
+.logline.mark1 { background: rgb(33 150 243 / 10%); }
 .logline .mark {
   margin-right: 8px;
 }
