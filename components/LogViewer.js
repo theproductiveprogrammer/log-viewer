@@ -23,27 +23,44 @@ function srx(search) {
   return null;
 }
 
-function filter(filters, lines) {
+function filter(marks, filters, lines) {
   if(!lines || !lines.length || !filters || !filters.length) return lines;
-  let ret = [];
   filters.forEach(f => {
-    if(f.t === '+') {
-      ret = lines.filter(line => line.txt.search(f.s) != -1);
-    } else {
-      ret = lines.filter(line => line.txt.search(f.s) == -1);
+    let ret = [];
+    let show_next = false;
+    for(let i = 0;i < lines.length;i++) {
+      const line = lines[i];
+      if(marks[line.num]) {
+        ret.push(line);
+        show_next = true;
+        continue;
+      }
+      if(show_next) {
+        show_next = false;
+        ret.push(line);
+        continue;
+      }
+      show_next = false;
+
+      if(f.t === '+') {
+        if(line.txt.search(f.s) != -1) ret.push(line);
+      } else {
+        if(line.txt.search(f.s) == -1) ret.push(line);
+      }
     }
     lines = ret;
   });
-  return ret;
+  return lines;
 }
 
 export default function LogViewer({title, txt, refresh}) {
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState([]);
+  const [marks, setMarks] = useState({});
 
   const search_rx = srx(search);
 
-  const lines = filter(filters, txtToLines(txt));
+  const lines = filter(marks, filters, txtToLines(txt));
   if(lines) {
     lines.forEach(line => {
       line.search_match = (search_rx && line.txt) ? line.txt.search(search_rx) != -1 : null;
@@ -54,7 +71,7 @@ export default function LogViewer({title, txt, refresh}) {
     <>
       <div className={styles.title}>{title}</div>
       <Search lines={lines} search={search} setSearch={setSearch} filters={filters} setFilters={setFilters}/>
-      <Viewer lines={lines} refresh={refresh}/>
+      <Viewer marks={marks} setMarks={setMarks} lines={lines} refresh={refresh}/>
     </>
   );
 }
@@ -181,8 +198,7 @@ function Search({lines, search, setSearch, filters, setFilters}) {
   );
 }
 
-export function Viewer({lines, refresh}) {
-  const [marks, setMarks] = useState({});
+export function Viewer({marks, setMarks, lines, refresh}) {
   const [sel, setSel] = useState("");
   const [mx, setMx] = useState(100);
   const [compact, setCompact] = useState(false);
