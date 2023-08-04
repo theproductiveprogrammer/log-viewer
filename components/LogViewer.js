@@ -181,6 +181,7 @@ export function Viewer({lines, refresh}) {
   const [marks, setMarks] = useState({});
   const [sel, setSel] = useState("");
   const [mx, setMx] = useState(100);
+  const [compact, setCompact] = useState(false);
 
   useEffect(() => {
     if(!lines || !lines.length) return;
@@ -242,13 +243,14 @@ export function Viewer({lines, refresh}) {
   return (
     <>
       {refresh ? <div className={styles.refreshbtn} onClick={refresh}>Refresh</div> : ""}
+      <div className={styles.refreshbtn} onClick={() => setCompact(!compact)}>{compact?"Full":"Compact"}</div>
       <div className={styles.counter}>
         {prev}
         <div className={styles.count}>{view.length} shown</div>
       </div>
       <Marks marks={marks} loglines={loglines} />
       <div className={styles.logcontainer} onMouseUp={handleSel} onDoubleClick={handleSel}>
-      {loglines.map(ll => <LogLine key={ll.num} ll={ll} mark={mark} sel={sel}/>)}
+      {loglines.map(ll => <LogLine compact={compact} key={ll.num} ll={ll} mark={mark} sel={sel}/>)}
       </div>
     </>
   );
@@ -300,20 +302,22 @@ function Marks({loglines, marks}) {
   );
 }
 
-function LogLine({ll,mark,sel}) {
+function LogLine({ll,mark,sel,compact}) {
   const markstyle = styles[`mark${ll.mark || 0}`] || "";
   const levelstyle = styles[`level-${ll.level}`.toLowerCase()] || "";
+  const compactstyle = compact ? styles.compact : "";
   let searchstyle = "";
   if(ll.search_match === false) searchstyle = styles.search_result_fail;
   if(ll.search_match === true) searchstyle = styles.search_result_pass;
   const headercontent = ll.date || ll.level;
+
   return (
-    <div className={`${styles.logline} ${levelstyle} ${markstyle} ${searchstyle}`}>
+    <div className={`${styles.logline} ${compactstyle} ${levelstyle} ${markstyle} ${searchstyle}`}>
 
       <div className={styles.mark} onClick={() => mark(ll)}></div>
 
       <div className={styles.logcontent}>
-      {headercontent ? (
+      {!compact && headercontent ? (
         <div className={styles.logline_header}>
           <div className={styles.date}>{ll.date && ll.date.toLocaleString(DateTime.DATETIME_FULL)}</div>
           <div className={styles.level}>{ll.level && `[${ll.level}]`}</div>
@@ -330,9 +334,11 @@ function LogLine({ll,mark,sel}) {
           ): ""}
         </div>
 
+      {compact ? "" : (
         <div className={styles.metacont}>
         {ll.meta.map((meta,i) => <div key={i} className={styles.meta}>{meta}</div>)}
         </div>
+      )}
       </div>
 
 
