@@ -14,6 +14,10 @@ const jsonStyle = Object.assign({}, defaultStyles, {
 
 function srx(search) {
   if(!search) return null;
+  const numberRegex = /^\d+$/;
+  if(numberRegex.test(search)) {
+    try { return new RegExp(`\\b${search}\\b`, 'i'); } catch(e) { /* ignore */ }
+  }
   try { return new RegExp(search, 'i'); } catch(e) { /* ignore */ }
   try { return new RegExp(escapeRegex(search), 'i'); } catch(e) { /* ignore */ }
   return null;
