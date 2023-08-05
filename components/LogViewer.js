@@ -326,6 +326,7 @@ function LogLine({ll,mark,sel,compact}) {
   const markstyle = styles[`mark${ll.mark || 0}`] || "";
   const levelstyle = styles[`level-${ll.level}`.toLowerCase()] || "";
   const compactstyle = compact ? styles.compact : "";
+  const levelExpand = compact ? 0 : 1;
   let searchstyle = "";
   if(ll.search_match === false) searchstyle = styles.search_result_fail;
   if(ll.search_match === true) searchstyle = styles.search_result_pass;
@@ -350,7 +351,7 @@ function LogLine({ll,mark,sel,compact}) {
         <div className={styles.msgcont}>
           <div className={styles.msg}>{hl(ll.msg)}</div>
           {ll.json ? (
-            <JsonView data={ll.json} shouldInitiallyExpand={level => level < 1} style={jsonStyle} />
+            <JsonView data={ll.json} shouldInitiallyExpand={level => level < levelExpand} style={jsonStyle} />
           ): ""}
         </div>
 
