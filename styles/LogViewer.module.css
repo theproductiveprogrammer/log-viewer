@@ -139,6 +139,10 @@
 .prevactive:hover {
   text-decoration: underline;
 }
+.sresprev {
+  cursor: pointer;
+  color: #8b63cf;
+}
 
 
 .searchcont {

@@ -71,7 +71,7 @@ export default function LogViewer({title, txt, refresh}) {
     <>
       <div className={styles.title}>{title}</div>
       <Search lines={lines} search={search} setSearch={setSearch} filters={filters} setFilters={setFilters}/>
-      <Viewer marks={marks} setMarks={setMarks} lines={lines} refresh={refresh}/>
+      <Viewer marks={marks} search={search} setMarks={setMarks} lines={lines} refresh={refresh}/>
     </>
   );
 }
@@ -143,12 +143,6 @@ async function copyToClipboard(textToCopy) {
 
 function Search({lines, search, setSearch, filters, setFilters}) {
 
-  let search_results = 0;
-  lines && lines.forEach(line => {
-    if(line.search_match) search_results++;
-  });
-  if(!search_results) search_results = "";
-
   const srch_class = search ? styles.enabled : styles.disabled;
   const filter_class = filters && filters.length ? styles.enabled : styles.disabled;
 
@@ -186,7 +180,7 @@ function Search({lines, search, setSearch, filters, setFilters}) {
         type="text"
         placeholder="/search" />
         <div className={styles.srcont}>
-          <div className={`${styles.srcopy} ${srch_class}`} onClick={copySearch}>&#128269; {search_results}</div>
+          <div className={`${styles.srcopy} ${srch_class}`} onClick={copySearch}>&#128269;</div>
           <div className={styles.filter_bar}>
             <div className={`${styles.filter_in} ${srch_class}`} onClick={filterIn}>&#x2713;</div>
             <div className={`${styles.filter_out} ${srch_class}`} onClick={filterOut}>&#120273;</div>
@@ -198,7 +192,7 @@ function Search({lines, search, setSearch, filters, setFilters}) {
   );
 }
 
-export function Viewer({marks, setMarks, lines, refresh}) {
+export function Viewer({search, marks, setMarks, lines, refresh}) {
   const [sel, setSel] = useState("");
   const [mx, setMx] = useState(100);
   const [compact, setCompact] = useState(false);
@@ -220,6 +214,9 @@ export function Viewer({marks, setMarks, lines, refresh}) {
   }, [mx,lines]);
 
   function showMore() {
+    setMx(mx + 50);
+  }
+  function showLastSearch() {
     const start = mx + 1;
     for(let i = start;lines.length > i;i++) {
       const line = lines[lines.length-i];
@@ -228,18 +225,29 @@ export function Viewer({marks, setMarks, lines, refresh}) {
         return;
       }
     }
-    setMx(mx + 50);
+  }
+
+  function searchCount() {
+    if(!lines || !lines.length) return 0;
+    let count = 0;
+    lines.forEach(line => count += line.search_match ? 1 : 0);
+    return count;
   }
 
   if(!lines || !lines.length) return (<div></div>);
 
   let prev = <div className={styles.prev}>0 left</div>;
+  let sres = <div className={styles.prev}>&nbsp;</div>;
   let view = lines;
   let start = 0;
   if(lines.length > mx) {
     const start = lines.length - mx;
     view = lines.slice(start, lines.length);
     prev = <div className={styles.prevactive} onClick={showMore}>&#8593;...{start} more</div>
+  }
+  const scount = searchCount();
+  if(search) {
+    sres = <div className={styles.sres}><span className={styles.sresprev} onClick={showLastSearch}>&#8593;</span> ({scount} found)</div>
   }
 
   let loglines = parseLog(view, marks, sel);
@@ -267,6 +275,7 @@ export function Viewer({marks, setMarks, lines, refresh}) {
       <div className={styles.counter}>
         {prev}
         <div className={styles.count}>{view.length} shown</div>
+        {sres}
       </div>
       <Marks marks={marks} loglines={loglines} />
       <div className={styles.logcontainer} onMouseUp={handleSel} onDoubleClick={handleSel}>
