@@ -459,11 +459,8 @@ function parseLog(lines, marks, sel) {
     };
     while(true) {
       if(l.line_left.startsWith("{") || l.line_left.startsWith("[")) {
-        try {
-          curr.json = JSON.parse(l.line_left);
-          l.line_left = null;
-          break;
-        } catch(e) { /* */ }
+        setCurrJSON(l, 0, curr);
+        if(curr.json) break;
       }
       if(!curr.date) curr.date = get_date_1(l);
       const chunk = get_chunk_1(l);
@@ -484,21 +481,31 @@ function parseLog(lines, marks, sel) {
       }
       curr.meta.push(chunk);
     }
+    if(!curr.json && l.line_left) {
+      const possibleJsonIndex = l.line_left.indexOf("{");
+      setCurrJSON(l, possibleJsonIndex, curr);
+    }
     if(!curr.json) {
-      let possibleJsonIndex = -1;
-      if(l.line_left) possibleJsonIndex = l.line_left.indexOf("{");
-      if(possibleJsonIndex === -1) possibleJsonIndex = l.line_left.indexOf("[");
-      if(possibleJsonIndex > -1) {
-        try {
-          const possibleJson = l.line_left.substring(possibleJsonIndex).trim();
-          curr.json = JSON.parse(possibleJson);
-          l.line_left = l.line_left.substring(0, possibleJsonIndex);
-        } catch(e) { /* */ }
-      }
+      const possibleJsonIndex = l.line_left.indexOf("[");
+      setCurrJSON(l, possibleJsonIndex, curr);
     }
     logline_from_json(curr);
     curr.msg = l.line_left;
     return curr;
+  }
+
+  function setCurrJSON(l, possibleJsonIndex, curr) {
+    if(possibleJsonIndex == -1) return;
+    try {
+      if(possibleJsonIndex) {
+        const possibleJson = l.line_left.substring(possibleJsonIndex).trim();
+        curr.json = JSON.parse(possibleJson);
+        l.line_left = l.line_left.substring(0, possibleJsonIndex);
+      } else {
+          curr.json = JSON.parse(l.line_left);
+          l.line_left = null;
+      }
+    } catch(e) { /* */ }
   }
 
   function get_date_1(l) {
