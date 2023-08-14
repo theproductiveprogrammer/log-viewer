@@ -330,7 +330,7 @@ function LogLine({ll,mark,sel,compact}) {
   const markstyle = styles[`mark${ll.mark || 0}`] || "";
   const levelstyle = styles[`level-${ll.level}`.toLowerCase()] || "";
   const compactstyle = compact ? styles.compact : "";
-  const levelExpand = compact ? 0 : 1;
+  const levelExpand = compact ? 0 : (Array.isArray(ll.json) ? 2 : 1);
   let searchstyle = "";
   if(ll.search_match === false) searchstyle = styles.search_result_fail;
   if(ll.search_match === true) searchstyle = styles.search_result_pass;
