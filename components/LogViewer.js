@@ -263,11 +263,6 @@ export function Viewer({search, marks, setMarks, lines, refresh}) {
     });
   }
 
-  function handleSel() {
-    if(window.getSelection()) setSel(window.getSelection().toString());
-    else setSel("");
-  }
-
   return (
     <>
       {refresh ? <div className={styles.refreshbtn} onClick={refresh}>Refresh</div> : ""}
@@ -278,7 +273,7 @@ export function Viewer({search, marks, setMarks, lines, refresh}) {
         {sres}
       </div>
       <Marks marks={marks} loglines={loglines} />
-      <div className={styles.logcontainer} onMouseUp={handleSel} onDoubleClick={handleSel}>
+      <div className={styles.logcontainer}>
       {loglines.map(ll => <LogLine compact={compact} key={ll.num} ll={ll} mark={mark} sel={sel}/>)}
       </div>
     </>
@@ -382,18 +377,20 @@ function LogLine({ll,mark,sel,compact}) {
   function hl(txt) {
     if(!txt) return;
 
-    txt = hl_errorstack(txt);
+    const upd = hl_errorstack(txt);
+    if(!upd) return;
 
-    txt = hl_selected(txt);
+    //txt = hl_selected(txt);
+
 
     return (
-      <div dangerouslySetInnerHTML={{ __html: txt }} />
+      <div dangerouslySetInnerHTML={{ __html: upd }} />
     );
   }
 
   function hl_errorstack(txt) {
-    if(!ll.level) return txt;
-    if(ll.level.toLowerCase() != "error" && ll.level.toLowerCase() != "warn") return txt;
+    if(!ll.level) return null;
+    if(ll.level.toLowerCase() != "error" && ll.level.toLowerCase() != "warn") return null;
     let lines = txt.split(/[\r\n]/g);
     let found = false;
     lines = lines.map(l => {
@@ -404,7 +401,7 @@ function LogLine({ll,mark,sel,compact}) {
         return `<span class="${styles.err_stack_hl}">${l}</span>`;
       }
     });
-    if(!found) return txt;
+    if(!found) return null;
     lines.unshift(`<div class="${styles.err_stack_block}">`)
     lines.push(`</div>`);
     return lines.join('\n');
