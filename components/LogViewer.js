@@ -378,7 +378,7 @@ function LogLine({ll,mark,sel,compact}) {
     if(!txt) return;
 
     const upd = hl_errorstack(txt);
-    if(!upd) return;
+    if(!upd) return txt;
 
     //txt = hl_selected(txt);
 
@@ -481,7 +481,7 @@ function parseLog(lines, marks, sel) {
       }
       curr.meta.push(chunk);
     }
-    if(!curr.json && l.line_left) {
+    if(!curr.json) {
       const possibleJsonIndex = l.line_left.indexOf("{");
       setCurrJSON(l, possibleJsonIndex, curr);
     }
@@ -496,6 +496,7 @@ function parseLog(lines, marks, sel) {
 
   function setCurrJSON(l, possibleJsonIndex, curr) {
     if(possibleJsonIndex == -1) return;
+    if(!l.line_left) return;
     try {
       if(possibleJsonIndex) {
         const possibleJson = l.line_left.substring(possibleJsonIndex).trim();
