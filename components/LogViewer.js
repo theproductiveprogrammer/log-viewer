@@ -461,7 +461,7 @@ function parseLog(lines, marks, sel) {
       curr_chunk: null,
     };
     while(true) {
-      if(l.line_left.startsWith("{")) {
+      if(l.line_left.startsWith("{") || l.line_left.startsWith("[")) {
         try {
           curr.json = JSON.parse(l.line_left);
           l.line_left = null;
@@ -488,7 +488,9 @@ function parseLog(lines, marks, sel) {
       curr.meta.push(chunk);
     }
     if(!curr.json) {
-      const possibleJsonIndex = l.line_left ? l.line_left.indexOf("{") : -1;
+      let possibleJsonIndex = -1;
+      if(l.line_left) possibleJsonIndex = l.line_left.indexOf("{");
+      if(possibleJsonIndex === -1) possibleJsonIndex = l.line_left.indexOf("[");
       if(possibleJsonIndex > -1) {
         try {
           const possibleJson = l.line_left.substring(possibleJsonIndex).trim();
