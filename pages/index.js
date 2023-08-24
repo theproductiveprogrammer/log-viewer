@@ -50,7 +50,7 @@ export default function Home() {
   if(plain) return (
       <main className={`${styles.plain} ${inter.className}`}>
         <LogViewer title="Log Viewer" refresh={refresh} txt={txt}/>
-        <textarea className={styles.plainentry} value={txt} onChange={e => setTxt(e.target.value)}></textarea>
+        <TextArea className={styles.plainentry} setTxt={setTxt} />
       </main>
   );
 
@@ -66,12 +66,31 @@ export default function Home() {
           <p>
             Paste your log below:
           </p>
-          <textarea value={txt} onChange={e => setTxt(e.target.value)}></textarea>
+          <TextArea setTxt={setTxt} />
         </div>
         <div className={styles.display}>
           <LogViewer title="Log Viewer" txt={txt}/>
         </div>
       </main>
     </>
+  )
+}
+
+function TextArea({className, setTxt}) {
+  return (
+    <textarea className={className}
+    autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false"
+    onPaste={e => {
+      e.preventDefault();
+      const pasted = e.clipboardData.getData('text/plain');
+      setTxt(pasted);
+      e.target.disabled = true;
+      if(pasted.length > 10000) {
+        e.target.value=pasted.substring(0, 5000) + "\n...\n\n...\n\n(cut)\n\n...\n\n...\n" + pasted.substring(pasted.length - 5000);
+      } else {
+        e.target.value=pasted;
+      }
+    }}
+    ></textarea>
   )
 }
