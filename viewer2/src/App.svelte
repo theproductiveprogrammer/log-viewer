@@ -1,11 +1,11 @@
 <script>
+  import { state } from './state.js';
   import { getSources } from './data.js';
   import SourceList from './lib/SourceList.svelte';
 
   export let serverURL;
 
   let sourcesP = getSources(serverURL);
-  sourcesP.then(sources => console.log(sources))
 
 </script>
 
@@ -13,6 +13,10 @@
   <h1>Log Viewer</h1>
 
   <SourceList {sourcesP} />
+
+  {#if $state.selectedSource}
+    <p>Selected {$state.selectedSource}</p>
+  {/if}
 
 </main>
 
