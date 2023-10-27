@@ -1,14 +1,17 @@
-const Fastify = require('fastify');
-const sources = require('./sources.js');
+import Fastify from 'fastify';
+import cors from '@fastify/cors';
 
 const fastify = Fastify({ logger: true });
-fastify.register(require('@fastify/cors'));
+fastify.register(cors);
 
 fastify.get('/sources', (req, res) => res.send(Object.keys(sources)))
 
-fastify.listen({ port: 8887 }, (err) => {
-  if (err) {
+const start = async () => {
+  try {
+    await fastify.listen({ port: 3000 })
+  } catch (err) {
     fastify.log.error(err)
     process.exit(1)
   }
-})
+}
+start()
