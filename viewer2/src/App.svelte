@@ -1,12 +1,11 @@
 <script>
-  import { sources } from './stores.js';
   import { getSources } from './data.js';
   import SourceList from './lib/SourceList.svelte';
 
   export let serverURL;
-  console.log(serverURL);
 
   let sourcesP = getSources(serverURL);
+  sourcesP.then(sources => console.log(sources))
 
 </script>
 
