@@ -7,7 +7,7 @@
   <p>loading ...</p>
 {:then sources}
   {#each sources as source (source)}
-    <p on:click={e => $state.selectedSource = source}>{source}</p>
+    <a href="#{source}" on:click|preventDefault={e => $state.selectedSource = source}>{source}</a>
   {/each}
 {:catch error}
   <p style="color: red">{error.message}</p>
