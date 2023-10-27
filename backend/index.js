@@ -2,10 +2,9 @@ const Fastify = require('fastify');
 const sources = require('./sources.js');
 
 const fastify = Fastify({ logger: true });
+fastify.register(require('@fastify/cors'));
 
-  res.send({ hello: 'world' })
-fastify.get('/sources', function handler (req, res) {
-})
+fastify.get('/sources', (req, res) => res.send(sources))
 
 fastify.listen({ port: 8887 }, (err) => {
   if (err) {

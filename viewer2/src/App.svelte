@@ -1,5 +1,4 @@
 <script>
-  import Counter from './lib/Counter.svelte';
   import { sources } from './stores.js';
   import { getSources } from './data.js';
   import SourceList from './lib/SourceList.svelte';
