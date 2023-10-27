@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "description": "Fetch logs and provide them to the main app",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ."
   },
   "author": "charles.lobo@gmail.com",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^4.24.3"
+  }
 }
