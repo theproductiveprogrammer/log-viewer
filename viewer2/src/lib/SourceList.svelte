@@ -16,12 +16,12 @@
     if(fetching[log.id]) return;
     fetching[log.id] = true;
     $current.fetching = true;
+    $current.error = null;
     visible = false;
     try {
       $current.log = await getLog(serverURL, log);
       delete fetching[log.id];
       $current.fetching = false;
-      $current.error = null;
     } catch(e) {
       delete fetching[log.id];
       $current.log = null;
@@ -57,11 +57,11 @@
     <div class="source-panel" on:click={e => visible = true}>Sources</div>
   {/if}
 {:catch error}
-  <p style="color: red">{error.message}</p>
+  <div class="log-error">{error.message}</div>
 {/await}
 
 <style>
-  .source-panel, .source-list {
+  .source-list, .source-panel {
     position: absolute;
     z-index: 1000;
     box-shadow: 0 0 1px #666;
@@ -106,5 +106,13 @@
   }
   a {
     display: block;
+  }
+  .log-error {
+    width: 100%;
+    background: #fdd;
+    text-align: center;
+    color: red;
+    border: 1px solid #ccc;
+    padding: 8px;
   }
 </style>

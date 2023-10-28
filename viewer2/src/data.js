@@ -1,3 +1,5 @@
+import makeLog from './log-fns.js';
+
 const cache = {
   sources: null,
   logs: {},
@@ -44,23 +46,26 @@ export async function getLog(serverURL, forSource) {
   if(cache.logs[forSource] && (now - cache.logs[forSource].fetchedAt < 10000)) {
     console.log(`Resolving cached ${forSource.id}...`);
     await (new Promise(resolve => setTimeout(resolve, 3500)));
-    return cache.logs[forSource].log;
+    return cache.logs[forSource];
   }
 
   console.log(`Fetching ${forSource.id}...`);
   const res = await fetch(`${serverURL}/log`, {
     method: 'POST', body: JSON.stringify(forSource), headers: { 'Content-Type' : 'application/json' },
   });
-  if(res.ok) {
-    const text = await res.text();
-    const log = {
-      ...forSource,
-      text,
-    }
-    cache.logs[forSource] = { log, fetchedAt: now }
-    return log;
-  } else {
+  if(!res.ok) {
     throw new Error(`Failed getting log: ${forSource.id}`);
   }
+
+  const txt = await res.text();
+  const log = cache.logs[forSource] || {
+    src: forSource,
+    lines: [],
+    view: {},
+    fetchedAt: now,
+  };
+  makeLog(forSource.name, txt, log);
+  cache.logs[forSource] = log;
+  return log;
 }
 
