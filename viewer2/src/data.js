@@ -52,7 +52,11 @@ export async function getLog(serverURL, forSource) {
     method: 'POST', body: JSON.stringify(forSource), headers: { 'Content-Type' : 'application/json' },
   });
   if(res.ok) {
-    const log = await res.text();
+    const text = await res.text();
+    const log = {
+      ...forSource,
+      text,
+    }
     cache.logs[forSource] = { log, fetchedAt: now }
     return log;
   } else {

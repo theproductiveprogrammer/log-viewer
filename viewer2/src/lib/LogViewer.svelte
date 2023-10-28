@@ -12,5 +12,16 @@
   <p style="color: red">{error.message}</p>
 {/if}
 {#if $current.log}
-    <p>Logs:{$current.log}</p>
+  <div class="log-name">{$current.log.name}</div>
+  {$current.log.text}
 {/if}
+
+<style>
+  .log-name {
+    text-align: right;
+    margin-bottom: 12px;
+    margin-right: 1em;
+    font-weight: bold;
+    font-size: 0.9em;
+  }
+</style>
