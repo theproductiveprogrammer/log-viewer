@@ -1,9 +1,12 @@
 <script>
   import { state } from '../state.js';
+  import { getSources } from '../data.js';
   import LoadingMessages from './LoadingMessages.svelte';
   import { loadingSources } from '../messages.js';
 
-  export let sourcesP;
+  export let serverURL;
+
+  let sourcesP = getSources(serverURL);
 </script>
 
 {#await sourcesP}

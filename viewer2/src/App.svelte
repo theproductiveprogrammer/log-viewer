@@ -1,22 +1,17 @@
 <script>
   import { state } from './state.js';
-  import { getSources } from './data.js';
   import SourceList from './lib/SourceList.svelte';
+  import LogViewer from './lib/LogViewer.svelte';
 
   export let serverURL;
-
-  let sourcesP = getSources(serverURL);
-
 </script>
 
 <main>
   <h1>Log Viewer</h1>
 
-  <SourceList {sourcesP} />
+  <SourceList {serverURL} />
+  <LogViewer {serverURL} />
 
-  {#if $state.selectedSource}
-    <p>Selected {$state.selectedSource.id}</p>
-  {/if}
 
 </main>
 
