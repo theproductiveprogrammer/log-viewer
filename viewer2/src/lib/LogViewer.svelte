@@ -29,7 +29,7 @@
       </div>
 
       {#if line.nfo && line.nfo.msg}
-        <div class="log-line-info">{line.txt}</div>
+        <div class="log-line-info">{line.nfo.msg}</div>
       {:else}
         <div class="log-line-txt">{line.txt}</div>
       {/if}
@@ -50,7 +50,7 @@
   .log-mark-cont {
     font-size: 0.8em;
     width: var(--mark-size);
-    margin: 12px;
+    margin: 0 12px;
   }
   .log-mark {
     display: flex;
@@ -69,11 +69,8 @@
     align-items: flex-start;
     position: relative;
     color: #444;
-    margin-top: 1em;
-    padding-top: 0.5em;
-
-    padding-bottom: 16px;
-    box-shadow: 0px 1px 0px #e2d8f3;
+    padding: 8px 0;
+    box-shadow: 0px 0px 1px #e2d8f3;
   }
   .log-line.compact,
   .log-line.plain {
