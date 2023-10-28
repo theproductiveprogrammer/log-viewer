@@ -7,12 +7,12 @@
     if(info.minutes) i.push(`${info.minutes}m`);
     if(info.seconds) {
       if(info.milliseconds) {
-        i.push(`${info.seconds}.${info.milliseconds}`);
+        i.push(`${info.seconds + (info.milliseconds/1000).toFixed(3)}s`);
       } else {
         i.push(`${info.seconds}s`);
       }
     } else {
-      if(info.milliseconds) i.push(`0.${info.milliseconds}`);
+      if(info.milliseconds) i.push(`${(info.milliseconds/1000).toFixed(3)}`);
     }
     return "+"+i.join(" ");
   }

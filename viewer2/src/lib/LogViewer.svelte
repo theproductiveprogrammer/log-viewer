@@ -31,7 +31,7 @@
       {#if line.nfo && line.nfo.msg}
         <div class="log-line-info">{line.txt}</div>
       {:else}
-        <div class="log-txt">{line.txt}</div>
+        <div class="log-line-txt">{line.txt}</div>
       {/if}
 
     </div>
@@ -42,7 +42,8 @@
   .log-line {
     --mark-size: 64px;
   }
-  .log-line-info {
+  .log-line-info,
+  .log-line-txt {
     width: calc(100% - var(--mark-size));
     overflow: scroll;
   }
