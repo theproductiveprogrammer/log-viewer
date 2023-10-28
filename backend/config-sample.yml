@@ -1,0 +1,14 @@
+log-viewer:
+  port: 8887
+  sources:
+    ftp:
+      ftpserver1:
+        ip: 152.151.150.100
+        port: 21
+        username: ftpuser
+        password: IlOveSeCreTs
+      ftpserver2:
+        ip: xxx.xxx.xxx.xxx
+        port: xx
+        username: xxxxx
+        password: xxxxx
