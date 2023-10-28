@@ -4,13 +4,21 @@ import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import YAML from 'yaml';
 
+import { fetch as fetchFTP } from './ftplogs.js';
+
 const fastify = Fastify({ logger: true });
 fastify.register(cors);
 
 const cfg = YAML.parse(fs.readFileSync('./config.yml', 'utf8'))['log-viewer'];
 const sources = sourceInfo(cfg.sources);
 
-fastify.get('/sources', (req, res) => res.send(sources));
+fastify.post('/sources', (req, res) => res.send(sources));
+fastify.post('/log', async (req, res) => {
+  if(req.body && req.body.type == 'ftp') {
+    return await fetchFTP(cfg.sources.ftp[req.body.name]);
+  }
+  res.status(400).send(`Did not understand source: ${JSON.stringify(req.body)}`);
+});
 
 
 /*    problem/

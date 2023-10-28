@@ -3,12 +3,12 @@ log-viewer:
   sources:
     ftp:
       ftpserver1:
-        ip: 152.151.150.100
+        host: 152.151.150.100
         port: 21
-        username: ftpuser
+        user: ftpuser
         password: IlOveSeCreTs
       ftpserver2:
         ip: xxx.xxx.xxx.xxx
         port: xx
-        username: xxxxx
+        user: xxxxx
         password: xxxxx
