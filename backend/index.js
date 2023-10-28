@@ -8,13 +8,13 @@ const fastify = Fastify({ logger: true });
 fastify.register(cors);
 
 const cfg = YAML.parse(fs.readFileSync('./config.yml', 'utf8'))['log-viewer'];
-const sources = sourceNames(cfg.sources);
+const sources = sourceInfo(cfg.sources);
 
 fastify.get('/sources', (req, res) => res.send(sources));
 
 
 /*    problem/
- * the config sources are listed by type:
+ * the config sources have lots of details
  * log-viewer:
  *    sources:
  *      ftp:
@@ -22,16 +22,16 @@ fastify.get('/sources', (req, res) => res.send(sources));
  *          ..details..
  *        source2:
  *          ..details..
- * we need to have them uniquely identified like so:
- *    ftp.source1, ftp.source2,...
+ * we need only to return their identifiers:
+ *    { type: 'ftp', name: 'source1' }, { type: 'ftp', name: 'source2' }...
  *
  *    way/
- * iterate over sources, iterate over source members, join the two and return
+ * iterate over sources, iterate over source members, return the info
  */
-function sourceNames(sources) {
+function sourceInfo(sources) {
   const names = [];
-  for(let typ in sources) {
-    for(let name in sources[typ]) names.push(`${typ}.${name}`);
+  for(let type in sources) {
+    for(let name in sources[type]) names.push({type, name});
   }
   return names;
 }

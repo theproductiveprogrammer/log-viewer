@@ -15,7 +15,7 @@
   <SourceList {sourcesP} />
 
   {#if $state.selectedSource}
-    <p>Selected {$state.selectedSource}</p>
+    <p>Selected {$state.selectedSource.id}</p>
   {/if}
 
 </main>
