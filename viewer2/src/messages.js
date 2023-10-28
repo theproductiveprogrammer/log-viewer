@@ -3,9 +3,7 @@ export const loadingSources = [
   "Fetching sources",
 ];
 export const loadingLogs = [
+  "Connecting...",
   "Fetching log",
-  "Server connection established",
-  "Locating log storage",
-  "Establishing storage connection",
-  "Downloading log",
+  "Downloading",
 ];

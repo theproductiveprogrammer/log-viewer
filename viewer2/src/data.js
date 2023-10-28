@@ -43,7 +43,7 @@ export async function getLog(serverURL, forSource) {
   const now = Date.now();
   if(cache.logs[forSource] && (now - cache.logs[forSource].fetchedAt < 10000)) {
     console.log(`Resolving cached ${forSource.id}...`);
-    await (new Promise(resolve => setTimeout(resolve, 2500)));
+    await (new Promise(resolve => setTimeout(resolve, 25000)));
     return cache.logs[forSource].log;
   }
 

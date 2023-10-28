@@ -34,6 +34,8 @@ onMount(() => {
 });
 </script>
 
+<div class="loading-message-cont">
+<div class="loading-message">
 {#if !done}
 {#key i}
   <span in:typewriter={{ speed: 5 }}>
@@ -45,3 +47,31 @@ onMount(() => {
   {messages[messages.length-1]}<span in:typewriter={{ speed: 1 }}>{dots}</span>
   {/key}
 {/if}
+</div>
+</div>
+
+<style>
+  .loading-message-cont {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(9,9,9,0.1);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .loading-message {
+    padding-left: 1em;
+    min-width: 256px;
+    height: 64px;
+    line-height: 64px;
+    border-radius: 2px;
+    background: #333;
+    color: #eef;
+  }
+</style>
