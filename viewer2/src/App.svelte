@@ -1,5 +1,4 @@
 <script>
-  import { state } from './state.js';
   import SourceList from './lib/SourceList.svelte';
   import LogViewer from './lib/LogViewer.svelte';
 
@@ -11,7 +10,6 @@
 
   <SourceList {serverURL} />
   <LogViewer {serverURL} />
-
 
 </main>
 

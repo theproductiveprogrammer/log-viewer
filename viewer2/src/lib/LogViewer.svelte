@@ -1,27 +1,16 @@
 <script>
-  import { state } from '../state.js';
-  import { getLogs } from '../data.js';
+  import { current } from '../state.js';
   import LoadingMessages from './LoadingMessages.svelte';
   import { loadingLogs } from '../messages.js';
 
-  export let serverURL;
-
-  let logsP;
-
-  $:if($state.selectedSource) {
-    logsP = getLogs(serverURL, $state.selectedSource);
-  }
-
 </script>
 
-{#if $state.selectedSource}
-
-  {#await logsP}
+{#if $current.fetching}
     <LoadingMessages messages={loadingLogs} />
-  {:then logs}
-    <p>{logs}</p>
-  {:catch error}
-    <p style="color: red">{error.message}</p>
-  {/await}
-
+{/if}
+{#if $current.error}
+  <p style="color: red">{error.message}</p>
+{/if}
+{#if $current.log}
+    <p>Logs:{$current.log}</p>
 {/if}

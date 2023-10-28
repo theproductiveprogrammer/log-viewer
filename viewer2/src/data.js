@@ -3,6 +3,8 @@ const cache = {
   logs: {},
 }
 
+const inFlight = {}
+
 export async function getSources(serverURL) {
   if(!cache.sources) {
     console.log('Fetching sources from server...');
@@ -10,7 +12,21 @@ export async function getSources(serverURL) {
     if(res.ok) {
       const sources = await res.json();
       if(sources) {
-        sources.forEach(source => source.id = `${source.type}.${source.name}`);
+        sources.forEach(source => {
+          source.id = `${source.type}.${source.name}`;
+          if(source.logs) {
+            source.logs = source.logs.map(log => {
+              return {
+                id: `${source.id}|${log}`,
+                parent: {
+                  type: source.type,
+                  name: source.name,
+                },
+                name: log,
+              }
+            });
+          }
+        });
       } else {
         throw new Error('Did not get existing sources');
       }
@@ -23,20 +39,21 @@ export async function getSources(serverURL) {
   return cache.sources;
 }
 
-export async function getLogs(serverURL, forSource) {
+export async function getLog(serverURL, forSource) {
   const now = Date.now();
   if(cache.logs[forSource] && (now - cache.logs[forSource].fetchedAt < 10000)) {
-    return cache.logs[forSource];
+    console.log('cached');
+    return cache.logs[forSource].log;
   }
 
-  console.log(`Fetching ${forSource.id} logs...`);
+  console.log(`Fetching ${forSource.id}...`);
   const res = await fetch(`${serverURL}/log`, {
     method: 'POST', body: JSON.stringify(forSource), headers: { 'Content-Type' : 'application/json' },
   });
   if(res.ok) {
-    const logs = await res.json();
-    cache.logs[forSource] = logs;
-    return logs;
+    const log = await res.text();
+    cache.logs[forSource] = { log, fetchedAt: now }
+    return log;
   } else {
     throw new Error(`Failed getting log: ${forSource.id}`);
   }
