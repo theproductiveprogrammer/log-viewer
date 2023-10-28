@@ -9,7 +9,7 @@
   <h1>Log Viewer</h1>
 
   <SourceList {serverURL} />
-  <LogViewer {serverURL} />
+  <LogViewer />
 
 </main>
 
