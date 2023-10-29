@@ -41,8 +41,8 @@
         <ul>
         {#each source.logs as log (log.id)}
           <li>
-            <a href="#{log.id}" on:click|preventDefault={e => loadCurrent(log)}>
               {#if $current.log && log.id == $current.log.id}
+            <a href="#{log.id}" on:click|preventDefault={e => loadCurrent(log)} on:keydown|preventDefault={e => loadCurrent(log)}>
                 <span class="selected">{log.name} &rarr;</span>
               {:else}
                 {log.name}
@@ -54,7 +54,7 @@
       {/each}
     </div>
   {:else}
-    <div class="source-panel" on:click={e => visible = true}>Sources</div>
+    <div class="source-panel" on:click={e => visible = true} on:keydown={e => visible = true}>Sources</div>
   {/if}
 {:catch error}
   <div class="log-error">{error.message}</div>
