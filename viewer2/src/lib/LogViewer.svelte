@@ -84,7 +84,7 @@
     text-align: right;
     margin-bottom: 12px;
     margin-right: 1em;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 0.9em;
   }
   .log-error {
