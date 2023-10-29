@@ -6,6 +6,7 @@ import cors from '@fastify/cors';
 import YAML from 'yaml';
 
 import { fetch as fetchFTP } from './ftplogs.js';
+import { fetch as fetchFile } from './filelogs.js';
 
 const fastify = Fastify({ logger: true });
 fastify.register(cors);
@@ -22,7 +23,12 @@ await mkdir(cfg.download.folder, { recursive: true });
 fastify.post('/sources', (req, res) => res.send(sources));
 fastify.post('/log', async (req, res) => {
   if(req.body && req.body.parent && req.body.parent.name) {
-    if(req.body.parent.type == 'ftp') {
+    if(req.body.parent.type == 'file') {
+      const data = await fetchFile(cfg.sources.file[req.body.parent.name], req.body.name);
+      res.header('Content-Type', 'application/octect-stream');
+      res.send(data);
+      return res;
+    } else if(req.body.parent.type == 'ftp') {
       const dst = path.join(cfg.download.folder, req.body.parent.name);
       await mkdir(dst, { recursive: true });
       const data = await fetchFTP(dst, cfg.sources.ftp[req.body.parent.name], req.body.name);
