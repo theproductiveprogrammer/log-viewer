@@ -5,9 +5,11 @@
 
   export let line;
   export let full = true;
+
+  let raw = false;
 </script>
 
-<div class="log-line" class:plain={!hasNfo(line.nfo)}>
+<div class="log-line" class:plain={raw || !hasNfo(line.nfo)} on:dblclick|preventDefault={e => raw = !raw} role="none">
   {#if full && hasNfo(line.nfo)}
     <div class="log-line-hdr">
       {#if line.nfo.date}
@@ -27,7 +29,7 @@
     </div>
   </div>
 
-  {#if hasNfo(line.nfo)}
+  {#if !raw && hasNfo(line.nfo)}
 
     <div class="log-line-info">
       <div class="log-line-msg">{line.nfo.msg}</div>
@@ -90,7 +92,6 @@
     padding-top: 8px;
     box-shadow: 0px 0px 1px #e2d8f3;
   }
-  .log-line.compact,
   .log-line.plain {
     margin-top: 0.5em;
   }
