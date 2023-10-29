@@ -124,10 +124,10 @@
   .log-line-meta {
     margin-right: 4px;
   }
-  .log-line-footer .log-line-meta {
+  .log-line .log-line-meta {
     visibility: hidden;
   }
-  .log-line-footer:hover .log-line-meta {
+  .log-line:hover .log-line-meta {
     visibility: visible;
   }
 </style>
