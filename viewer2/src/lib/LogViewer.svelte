@@ -16,7 +16,7 @@
 {/if}
 {#if $current.log}
   <div class="log-name">{$current.log.src.name}</div>
-  {#each $current.log.lines as line (line.num)}
+  {#each $current.log.lines as line ($current.log.src.id + line.num)}
     <LogLine {line} />
   {/each}
 {/if}
