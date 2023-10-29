@@ -4,6 +4,6 @@ export const loadingSources = [
 ];
 export const loadingLogs = [
   "Connecting...",
-  "Fetching log",
+  "Fetching log...",
   "Downloading",
 ];
