@@ -1,4 +1,4 @@
-import makeLog from './log-fns.js';
+import makeLog, { rx_ify} from './log-fns.js';
 
 const cache = {
   sources: null,
@@ -46,37 +46,6 @@ export async function getSources(serverURL) {
 
   console.log(cache.sources)
   return cache.sources;
-
-  function rx_ify(transformers) {
-    const ret = [];
-    transformers.forEach(t => {
-      try {
-        let r = t.replace;
-        if(!r) {
-          console.error("Missing replace expression", t);
-          return;
-        }
-        let f = t.find;
-        if(!f) {
-          console.error("Missing find expression", t);
-          return;
-        }
-        if(f.startsWith('/')) {
-          const ndx = f.lastIndexOf('/');
-          if(ndx) {
-            f = new RegExp(f.substring(1, ndx), f.substring(ndx+1));
-          } else {
-            f = new RegExp(f);
-          }
-        }
-        if(t.match) ret.push({ match: new RegExp(t.match), find: f, replace: r })
-        else ret.push({find: f, replace: r});
-      } catch(e) {
-        console.error('Failed to understand regular expression', t);
-      }
-    });
-    return ret;
-  }
 }
 
 export async function getLog(serverURL, forSource) {

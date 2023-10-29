@@ -287,3 +287,60 @@ export function transform(transformers, lines) {
     return l;
   });
 }
+
+/*    understand/
+ * We get transformers as a list of tranformations to
+ * be applied to each log line:
+ *    [ {
+ *        match: <reg exp>,
+ *        find: <reg exp>,
+ *        replace: "replacement string"
+ *      }
+ *      {...
+ *    ]
+ *
+ * The problem is we get the expressions as strings as
+ * they come over the wire and we need to transform the
+ * match and find into regular expressions.
+ *      way/
+ * To do this, we check if the string is in the form
+ *    "/regexp/flags"
+ * or simply in the form
+ *    "regexp"
+ * For the first, we create a `new RegExp()` with the flags
+ * and for the second we just create with the default flags.
+ */
+export function str2rx(str) {
+  if(!str) return;
+  if(str.startsWith('/')) {
+    const ndx = str.lastIndexOf('/');
+    if(ndx) {
+      str = new RegExp(str.substring(1, ndx), str.substring(ndx+1));
+    } else {
+      str = new RegExp(str);
+    }
+  }
+  return str;
+}
+
+export function rx_ify(transformers) {
+  const ret = [];
+  transformers.forEach(t => {
+    try {
+      const transform = { match: str2rx(t.match), find: str2rx(t.find), replace: t.replace };
+      if(!transform.replace) {
+        console.error("Invalid or missing `replace:` key", t);
+        return;
+      }
+      if(!transform.find) {
+        console.error("Invalid or missing `find:` key", t);
+        return;
+      }
+      ret.push(transform);
+    } catch(e) {
+      console.error('Failed to parse regular expression', t);
+    }
+  });
+  return ret;
+}
+
