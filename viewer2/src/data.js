@@ -18,13 +18,19 @@ export async function getSources(serverURL) {
           source.id = `${source.type}.${source.name}`;
           if(source.logs) {
             source.logs = source.logs.map(log => {
+              if(typeof log === 'string') {
+                log = { name: log };
+              }
+              if(log.transformers) {
+                log.transformers = rx_ify(log.transformers);
+              }
               return {
-                id: `${source.id}|${log}`,
+                ...log,
+                id: `${source.id}|${log.name}`,
                 parent: {
                   type: source.type,
                   name: source.name,
                 },
-                name: log,
               }
             });
           }
@@ -38,7 +44,41 @@ export async function getSources(serverURL) {
     }
   }
 
+  console.log(cache.sources)
   return cache.sources;
+
+  function rx_ify(transformers) {
+    const ret = [];
+    transformers.forEach(t => {
+      try {
+        let r = t.replace;
+        if(!r) {
+          console.error("Missing replace expression", t);
+          return;
+        }
+        let f = t.find;
+        if(!f) {
+          console.error("Missing find expression", t);
+          return;
+        }
+        if(f.startsWith('/')) {
+          const ndx = f.lastIndexOf('/');
+          if(ndx) {
+            f = new RegExp(f.substring(1, ndx), f.substring(ndx+1));
+          } else {
+            f = new RegExp(f);
+          }
+        }
+        let m = t.match;
+        if(!m) m = /.*/
+        else m = new RegExp(m);
+        ret.push({ match: m, find: f, replace: r });
+      } catch(e) {
+        console.error('Failed to understand regular expression', t);
+      }
+    });
+    return ret;
+  }
 }
 
 export async function getLog(serverURL, forSource) {
@@ -64,8 +104,7 @@ export async function getLog(serverURL, forSource) {
     view: {},
     fetchedAt: now,
   };
-  makeLog(forSource.name, txt, log);
+  makeLog(forSource.name, forSource.transformers, txt, log);
   cache.logs[forSource.id] = log;
   return log;
 }
-

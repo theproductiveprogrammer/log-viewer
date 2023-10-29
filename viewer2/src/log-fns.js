@@ -15,8 +15,9 @@ import { DateTime } from 'luxon';
  * and last number of the already parsed lines in an `_optim`
  * field so that we can compare it with the new text.
  */
-export default function makeLog(name, txt, log) {
-  const lines = txt2Lines(txt);
+export default function makeLog(name, transformers, txt, log) {
+  let lines = txt2Lines(txt);
+  lines = transform(transformers, lines);
   if(!lines || !lines.length) {
     log.lines = [];
     log._optim = null;
@@ -268,3 +269,21 @@ export function hasNfo(nfo) {
   return nfo.json || nfo.date || nfo.level || nfo.sources || nfo.meta.length;
 }
 
+
+export function transform(transformers, lines) {
+  if(!transformers || !lines) return lines;
+  console.log(lines);
+  let i = 0;
+  return lines.map(l => {
+    let txt = l.txt;
+    if(txt) {
+      transformers.forEach(t => {
+        if(txt && txt.match(t.match)) {
+          txt = txt.replace(t.find, t.replace);
+        }
+      });
+    }
+    l.txt = txt;
+    return l;
+  });
+}
