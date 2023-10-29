@@ -3,6 +3,8 @@
   import { hasNfo } from '../log-fns.js';
   import AfterInfo from './AfterInfo.svelte';
 
+  import JSONTree from 'svelte-json-tree';
+
   export let line;
   export let full = true;
 
@@ -32,7 +34,13 @@
   {#if !raw && hasNfo(line.nfo)}
 
     <div class="log-line-info">
-      <div class="log-line-msg">{line.nfo.msg}</div>
+      <div class="log-line-msg">{line.nfo.msg}
+        {#if line.nfo.json}
+          <div class="log-json-tree">
+          <JSONTree value={line.nfo.json} />
+          </div>
+        {/if}
+      </div>
 
       {#if full && (line.nfo.meta || line.nfo.source) }
         <div class="log-line-footer">
@@ -56,6 +64,10 @@
 </div>
 
 <style>
+  .log-json-tree {
+    --json-tree-font-size: 13px;
+    --json-tree-font-family: Inter, system-ui, Avenir, Helvetica, Arial, 'Courier New', Courier, monospace;
+  }
   .log-line {
     --mark-size: 64px;
     --meta-size: 120px;
