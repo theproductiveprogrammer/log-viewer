@@ -278,7 +278,7 @@ export function transform(transformers, lines) {
     let txt = l.txt;
     if(txt) {
       transformers.forEach(t => {
-        if(txt && txt.match(t.match)) {
+        if(!t.match || txt.match(t.match)) {
           txt = txt.replace(t.find, t.replace);
         }
       });

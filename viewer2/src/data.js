@@ -69,10 +69,8 @@ export async function getSources(serverURL) {
             f = new RegExp(f);
           }
         }
-        let m = t.match;
-        if(!m) m = /.*/
-        else m = new RegExp(m);
-        ret.push({ match: m, find: f, replace: r });
+        if(t.match) ret.push({ match: new RegExp(t.match), find: f, replace: r })
+        else ret.push({find: f, replace: r});
       } catch(e) {
         console.error('Failed to understand regular expression', t);
       }
