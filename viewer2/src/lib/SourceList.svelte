@@ -41,8 +41,8 @@
         <ul>
         {#each source.logs as log (log.id)}
           <li>
-              {#if $current.log && log.id == $current.log.id}
             <a href="#{log.id}" on:click|preventDefault={e => loadCurrent(log)} on:keydown|preventDefault={e => loadCurrent(log)}>
+              {#if $current.log && log.id == $current.log.src.id}
                 <span class="selected">{log.name} &rarr;</span>
               {:else}
                 {log.name}
