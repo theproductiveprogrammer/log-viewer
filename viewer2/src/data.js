@@ -43,10 +43,10 @@ export async function getSources(serverURL) {
 
 export async function getLog(serverURL, forSource) {
   const now = Date.now();
-  if(cache.logs[forSource] && (now - cache.logs[forSource].fetchedAt < 10000)) {
+  if(cache.logs[forSource.id] && (now - cache.logs[forSource.id].fetchedAt < 10000)) {
     console.log(`Resolving cached ${forSource.id}...`);
     await (new Promise(resolve => setTimeout(resolve, 3500)));
-    return cache.logs[forSource];
+    return cache.logs[forSource.id];
   }
 
   console.log(`Fetching ${forSource.id}...`);
@@ -58,14 +58,14 @@ export async function getLog(serverURL, forSource) {
   }
 
   const txt = await res.text();
-  const log = cache.logs[forSource] || {
+  const log = cache.logs[forSource.id] || {
     src: forSource,
     lines: [],
     view: {},
     fetchedAt: now,
   };
   makeLog(forSource.name, txt, log);
-  cache.logs[forSource] = log;
+  cache.logs[forSource.id] = log;
   return log;
 }
 
