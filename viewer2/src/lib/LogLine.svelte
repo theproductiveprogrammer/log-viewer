@@ -12,6 +12,11 @@
 </script>
 
 <div class="log-line" class:plain={raw || !hasNfo(line.nfo)} on:dblclick|preventDefault={e => raw = !raw} role="none">
+  {#if raw}
+    <div class="log-line-txt-cont">
+    <div class="log-line-txt">{line.txt}</div>
+    </div>
+  {:else}
   {#if full && hasNfo(line.nfo)}
     <div class="log-line-hdr">
       {#if line.nfo.date}
@@ -31,7 +36,7 @@
     </div>
   </div>
 
-  {#if !raw && hasNfo(line.nfo)}
+  {#if full && hasNfo(line.nfo)}
 
     <div class="log-line-info">
       <div class="log-line-msg">{line.nfo.msg}
@@ -59,6 +64,7 @@
 
   {:else}
     <div class="log-line-txt">{line.txt}</div>
+  {/if}
   {/if}
 
 </div>
@@ -141,5 +147,10 @@
   }
   .log-line:hover .log-line-meta {
     visibility: visible;
+  }
+  .log-line-txt-cont {
+    padding-bottom: 4px;
+    padding-left: 8px;
+    font-size: 0.9em;
   }
 </style>
