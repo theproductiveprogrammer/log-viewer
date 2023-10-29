@@ -1,4 +1,6 @@
 <script>
+  import { compact } from '../state.js';
+
   import { DateTime } from 'luxon';
   import { hasNfo } from '../log-fns.js';
   import AfterInfo from './AfterInfo.svelte';
@@ -6,9 +8,9 @@
   import JSONTree from 'svelte-json-tree';
 
   export let line;
-  export let full = true;
 
   let raw = false;
+  $: full = ! $compact;
 </script>
 
 <div class="log-line" class:plain={raw || !hasNfo(line.nfo)} on:dblclick|preventDefault={e => raw = !raw} role="none">

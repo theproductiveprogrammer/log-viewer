@@ -5,23 +5,31 @@
   import LoadingMessages from './LoadingMessages.svelte';
   import { loadingLogs } from '../messages.js';
   import LogLine from './LogLine.svelte';
+  import Toolbar from './Toolbar.svelte';
 
 </script>
 
 {#if $current.fetching}
-    <LoadingMessages messages={loadingLogs} />
+  <LoadingMessages messages={loadingLogs} />
 {/if}
 {#if $current.error}
   <div class="log-error" in:slide>Error: {$current.error.message}</div>
 {/if}
 {#if $current.log}
   <div class="log-name">{$current.log.src.name}</div>
+  <Toolbar />
+  <div class="log-viewer-lines">
   {#each $current.log.lines as line ($current.log.src.id + line.num)}
     <LogLine {line} />
   {/each}
+  </div>
 {/if}
 
 <style>
+  .log-viewer-lines {
+    overflow: scroll;
+    height: 100vh;
+  }
   .log-name {
     text-align: right;
     margin-bottom: 12px;

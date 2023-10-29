@@ -54,6 +54,7 @@
       {/each}
     </div>
   {:else}
+    <div class="source-placeholder">&nbsp;</div>
     <div class="source-panel" on:click={e => visible = true} on:keydown={e => visible = true}>Sources</div>
   {/if}
 {:catch error}
@@ -61,8 +62,14 @@
 {/await}
 
 <style>
+  .source-placeholder {
+    display: block;
+    width: 100%;
+    height: 2em;
+  }
   .source-list, .source-panel {
     position: absolute;
+    top: 55px;
     z-index: 1000;
     box-shadow: 0 0 1px #666;
   }

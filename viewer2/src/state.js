@@ -5,3 +5,5 @@ export const current = writable({
   error: null,
   log: null,
 });
+
+export const compact = writable(false);
