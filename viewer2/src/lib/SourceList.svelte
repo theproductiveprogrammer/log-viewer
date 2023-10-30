@@ -11,7 +11,7 @@
   let sourcesP = getSources(serverURL);
 
   let fetching = {}
-  async function loadCurrent(log) {
+  async function loadCurrent(source, log) {
     if(!log) return;
     if(fetching[log.id]) return;
     fetching[log.id] = true;
@@ -19,7 +19,7 @@
     $current.error = null;
     visible = false;
     try {
-      $current.log = await getLog(serverURL, log);
+      $current.log = await getLog(serverURL, source.transformers, log);
       delete fetching[log.id];
       $current.fetching = false;
     } catch(e) {
@@ -41,7 +41,7 @@
         <ul>
         {#each source.logs as log (log.id)}
           <li>
-            <a href="#{log.id}" on:click|preventDefault={e => loadCurrent(log)} on:keydown|preventDefault={e => loadCurrent(log)}>
+            <a href="#{log.id}" on:click|preventDefault={e => loadCurrent(source, log)} on:keydown|preventDefault={e => loadCurrent(log)}>
               {#if $current.log && log.id == $current.log.src.id}
                 <span class="selected">{log.name} &rarr;</span>
               {:else}

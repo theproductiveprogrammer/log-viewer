@@ -17,13 +17,13 @@ export async function getSources(serverURL) {
       if(sources) {
         sources.forEach(source => {
           source.id = `${source.type}.${source.name}`;
+          if(source.transformers) {
+            source.transformers = rx_ify(source.transformers);
+          }
           if(source.logs) {
             source.logs = source.logs.map(log => {
               if(typeof log === 'string') {
                 log = { name: log };
-              }
-              if(log.transformers) {
-                log.transformers = rx_ify(log.transformers);
               }
               return {
                 ...log,
@@ -49,7 +49,7 @@ export async function getSources(serverURL) {
   return cache.sources;
 }
 
-export async function getLog(serverURL, forSource) {
+export async function getLog(serverURL, transformers, forSource) {
   const now = Date.now();
   if(cache.logs[forSource.id] && (now - cache.logs[forSource.id].fetchedAt < 10000)) {
     console.log(`Resolving cached ${forSource.id}...`);
@@ -74,7 +74,7 @@ export async function getLog(serverURL, forSource) {
     },
     fetchedAt: now,
   };
-  makeLog(forSource.name, forSource.transformers, txt, log);
+  makeLog(forSource.name, transformers, txt, log);
   cache.logs[forSource.id] = log;
   return log;
 }

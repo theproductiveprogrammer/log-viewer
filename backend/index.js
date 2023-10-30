@@ -60,8 +60,9 @@ fastify.post('/log', async (req, res) => {
  *          ..details..
  *            - log3
  *            - log4
- * we need to return their identifiers and log names:
- *    { type: 'ftp', name: 'source1', logs: [ log1, log2] }, { type: 'ftp', name: 'source2', logs: [...] }...,
+ * we need to return their types, names, and transformers:
+ *    { type: 'ftp', name: 'source1', logs: [ log1, log2], transformers:[...] },
+ *    { type: 'ftp', name: 'source2', logs: [...] }...,
  *
  *    way/
  * iterate over sources, iterate over source members, return the info
@@ -70,7 +71,11 @@ function sourceInfo(sources) {
   const infos = [];
   for(let type in sources) {
     const s = sources[type];
-    for(let name in s) infos.push({type, name, logs: s[name].logs});
+    for(let name in s) {
+      const curr = s[name];
+      if(curr.transformers) infos.push({type, name, logs: s[name].logs, transformers: curr.transformers});
+      else infos.push({type, name, logs: s[name].logs});
+    }
   }
   return infos;
 }
