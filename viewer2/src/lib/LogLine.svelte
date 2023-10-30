@@ -1,5 +1,6 @@
 <script>
   import { compact } from '../state.js';
+  import { fade,slide } from 'svelte/transition';
 
   import { DateTime } from 'luxon';
   import { hasNfo } from '../log-fns.js';
