@@ -1,11 +1,12 @@
 <script>
-  import { compact } from '../state.js';
   import Switch from './Switch.svelte';
+
+  export let view;
 </script>
 
 <div class="log-viewer-toolbar">
   <div class="log-toolbar-compact" >
-    <Switch value={compact}/>
+    <Switch value={view.compact}/>
   </div>
 </div>
 

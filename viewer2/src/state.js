@@ -6,4 +6,6 @@ export const current = writable({
   log: null,
 });
 
-export const compact = writable(false);
+export function makeCompact() {
+  return new writable(false);
+}

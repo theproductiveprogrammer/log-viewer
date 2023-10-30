@@ -17,10 +17,10 @@
 {/if}
 {#if $current.log}
   <div class="log-name">{$current.log.src.name}</div>
-  <Toolbar />
+  <Toolbar view={$current.log.view} />
   <div class="log-viewer-lines">
   {#each $current.log.lines as line ($current.log.src.id + line.num)}
-    <LogLine {line} />
+    <LogLine {line} view={$current.log.view} />
   {/each}
   </div>
 {/if}

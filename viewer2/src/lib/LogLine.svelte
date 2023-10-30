@@ -1,5 +1,4 @@
 <script>
-  import { compact } from '../state.js';
   import { fade,slide } from 'svelte/transition';
 
   import { DateTime } from 'luxon';
@@ -9,8 +8,10 @@
   import JSONTree from 'svelte-json-tree';
 
   export let line;
+  export let view;
 
   let raw = false;
+  $: compact = view.compact;
   $: full = ! $compact;
 </script>
 
