@@ -45,6 +45,7 @@
   });
 </script>
 
+{#key log}
 <div class="log-viewer">
   <div class="log-name">{log.src.name}</div>
   <Toolbar log={log} />
@@ -55,6 +56,7 @@
   {/each}
   </div>
 </div>
+{/key}
 
 <style>
   .log-viewer-lines {
