@@ -52,6 +52,7 @@
   {/if}
   <div class="log-mark-cont">
     <div class="log-mark">
+      <div class="log-line-num">{line.num}</div>
       <input type="checkbox">
       <AfterInfo info={line.nfo && line.nfo.after} />
     </div>
@@ -192,5 +193,8 @@
   }
   .notfound {
     opacity: 0.5;
+  }
+  .log-line-num {
+    font-size: 0.8em;
   }
 </style>
