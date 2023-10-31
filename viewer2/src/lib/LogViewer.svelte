@@ -2,6 +2,7 @@
   import { onDestroy } from 'svelte';
   import LogLine from './LogLine.svelte';
   import Toolbar from './Toolbar.svelte';
+  import FilterList from './FilterList.svelte';
 
   import { current_log } from '../state.js';
 
@@ -39,6 +40,7 @@
 <div class="log-viewer">
   <div class="log-name">{log.src.name}</div>
   <Toolbar log={log} />
+  <FilterList log={log} />
   <div class="log-viewer-lines">
   {#each lines as line (log.src.id + line.num)}
     <LogLine {line} view={log.view} />

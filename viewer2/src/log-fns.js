@@ -392,12 +392,12 @@ export function applyFilters(log, filters) {
     for(let i = 0;i < filters.length;i++) {
       const f = filters[i];
       if(f.type == '-') {
-        if(f.val.test(line.txt)) {
+        if(f.rx.test(line.txt)) {
           line.x = true;
           break;
         }
       } else {
-        if(!f.val.test(line.txt)) {
+        if(!f.rx.test(line.txt)) {
           line.x = true;
           break;
         }
@@ -406,11 +406,16 @@ export function applyFilters(log, filters) {
   });
 }
 
+export function removeFilter(log, filters, f) {
+  console.log(filters)
+  log.view.filters.set(filters.filter(filt => filt.id != f.id));
+}
+
 export function addFilter(type, val, log) {
-  val = rx_ify_or_str(val);
-  if(!val) return;
+  const rx = rx_ify_or_str(val);
+  if(!rx) return;
   log.view.filters.update(v => {
-    const f = { type, val, id: v.length+1 };
+    const f = { type, rx, val, id: v.length+1 };
     return [...v, f ];
   });
 }
