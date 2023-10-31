@@ -17,6 +17,7 @@ import { cleanHtml } from './util.js';
  * field so that we can compare it with the new text.
  */
 export default function makeLog(name, transformers, txt, log) {
+  log.txt = txt;
   let lines = txt2Lines(txt);
   lines = transform(transformers, lines);
   if(!lines || !lines.length) {
