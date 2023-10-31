@@ -12,12 +12,16 @@
     hide = "";
     keep = "";
   }
+
+  function enterH(e) {
+    if(e.key === 'Enter') filter();
+  }
 </script>
 
 
 <div class="log-search-bar">
-  <div>Hide: <input type="text" bind:value={hide}></div>
-  <div>Keep: <input type="text" bind:value={keep}></div>
+  <div>Hide: <input type="text" bind:value={hide} on:keydown={enterH}></div>
+  <div>Keep: <input type="text" bind:value={keep} on:keydown={enterH}></div>
   <button on:click={filter}>Go</button>
 </div>
 
