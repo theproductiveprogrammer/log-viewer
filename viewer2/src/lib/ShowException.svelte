@@ -1,7 +1,6 @@
 <script>
   export let msg;
   export let exception;
-  console.log(exception);
 </script>
 
 <div class="log-viewer-exception">

@@ -1,6 +1,6 @@
 <script>
   import SourceList from './lib/SourceList.svelte';
-  import LogViewer from './lib/LogViewer.svelte';
+  import LogsViewer from './lib/LogsViewer.svelte';
 
   export let serverURL;
 </script>
@@ -9,7 +9,7 @@
   <h1>Log Viewer</h1>
 
   <SourceList {serverURL} />
-  <LogViewer />
+  <LogsViewer />
 
 </main>
 
