@@ -11,3 +11,7 @@ export function makeCompact() {
 export function makeNumlines() {
   return new writable(24);
 }
+
+export function makeFilters() {
+  return new writable([]);
+}

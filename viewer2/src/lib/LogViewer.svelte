@@ -5,21 +5,32 @@
 
   import { current_log } from '../state.js';
 
+  import { applyNumlines, applyFilters } from '../log-fns.js';
+
   let log;
   let numlines;
+  let filters;
   let lines;
 
   let numlines_release;
+  let filters_release;
   let current_log_release = current_log.subscribe(v1 => {
     log = v1;
     if(numlines_release) numlines_release();
-    numlines_release = log.view.numlines.subscribe(v => {
-      numlines = v;
-      lines = $current_log.lines.slice(-v);
+    if(filters_release) filters_release();
+    numlines_release = log.view.numlines.subscribe(v2 => {
+      numlines = v2;
+      lines = applyNumlines(log, numlines);
+    });
+    filters_release = log.view.filters.subscribe(v3 => {
+      filters = v3;
+      applyFilters(log, filters);
+      lines = applyNumlines(log, numlines);
     });
   });
 
   onDestroy((v) => {
+    if(filters_release) filters_release();
     if(numlines_release) numlines_release();
     if(current_log_release) current_log_release();
   });

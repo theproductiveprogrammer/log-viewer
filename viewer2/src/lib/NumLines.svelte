@@ -2,13 +2,19 @@
   import { onDestroy } from 'svelte';
 
   export let log;
+  let totlines;
 
   $: numlines = log.view.numlines;
+  $: filters = log.view.filters;
+  $: {
+    totlines = log.lines.filter(l => !l.x).length;
+    $filters = $filters;
+  }
 
 </script>
 
 <div class="log-toolbar-numlines">
-  Showing <input type=number bind:value={$numlines} /> of {log.lines.length}
+  Showing <input type=number bind:value={$numlines} /> of {totlines}
   <a on:click|preventDefault={e => $numlines += 10}>+10</a>
 </div>
 

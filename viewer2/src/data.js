@@ -1,5 +1,5 @@
 import makeLog, { rx_ify} from './log-fns.js';
-import { makeCompact, makeNumlines } from './state.js';
+import { makeCompact, makeNumlines, makeFilters } from './state.js';
 
 const cache = {
   sources: null,
@@ -76,6 +76,7 @@ export async function getLog(serverURL, transformers, forSource) {
       view: {
         compact: makeCompact(),
         numlines: makeNumlines(),
+        filters: makeFilters(),
       },
       fetchedAt: now,
     };

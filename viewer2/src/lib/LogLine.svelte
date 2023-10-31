@@ -23,7 +23,7 @@
 
 </script>
 
-<div class="log-line" class:plain={raw || !hasNfo(line.nfo)} on:dblclick|preventDefault={toggleRaw} role="none">
+<div class="log-line" class:full class:plain={raw || !hasNfo(line.nfo)} on:dblclick|preventDefault={toggleRaw} role="none">
   {#if raw}
     <div class="log-line-txt-cont">
     <div class="log-line-txt">{line.txt}</div>
@@ -92,8 +92,11 @@
   .log-line {
     --mark-size: 64px;
     --meta-size: 120px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
+  }
+  .log-line.full {
+    font-size: 14px;
   }
   .log-line-info,
   .log-line-txt {

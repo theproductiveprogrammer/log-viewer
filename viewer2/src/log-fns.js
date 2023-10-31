@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { cleanHtml } from './util.js';
+import { cleanHtml, rx_ify_or_str } from './util.js';
 
 /*    problem/
  * we are given a large log text that we need to
@@ -351,5 +351,67 @@ export function rx_ify(transformers) {
     }
   });
   return ret;
+}
+
+
+/*    way/
+ * walk backwards through the log lines, gathering `numlines`
+ * items that have not been filtered out
+ */
+export function applyNumlines(log, numlines) {
+  let display = numlines;
+  if(display < 1) display = 1;
+
+  const ret = [];
+  if(log.lines) {
+    for(let i = log.lines.length-1;i >= 0;i--) {
+      const line = log.lines[i];
+      if(line.x) continue;
+      ret.unshift(line);
+      if(ret.length == display) break;
+    }
+  }
+  return ret;
+}
+
+/*    way/
+ * walk through the log lines, applying filters
+ * until one filters it out.
+ */
+export function applyFilters(log, filters) {
+  if(!log.lines) return;
+  log.lines.forEach(line => {
+    delete line.x;
+  });
+  if(!filters) return;
+  log.lines.forEach(line => {
+    if(!line.txt) {
+      line.x = true;
+      return;
+    }
+    for(let i = 0;i < filters.length;i++) {
+      const f = filters[i];
+      if(f.type == '-') {
+        if(f.val.test(line.txt)) {
+          line.x = true;
+          break;
+        }
+      } else {
+        if(!f.val.test(line.txt)) {
+          line.x = true;
+          break;
+        }
+      }
+    }
+  });
+}
+
+export function addFilter(type, val, log) {
+  val = rx_ify_or_str(val);
+  if(!val) return;
+  log.view.filters.update(v => {
+    const f = { type, val, id: v.length+1 };
+    return [...v, f ];
+  });
 }
 
