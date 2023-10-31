@@ -73,8 +73,9 @@ function sourceInfo(sources) {
     const s = sources[type];
     for(let name in s) {
       const curr = s[name];
-      if(curr.transformers) infos.push({type, name, logs: s[name].logs, transformers: curr.transformers});
-      else infos.push({type, name, logs: s[name].logs});
+      const compact = curr.compact;
+      const transformers = curr.transformers;
+      infos.push({compact, type, name, logs: s[name].logs, transformers});
     }
   }
   return infos;

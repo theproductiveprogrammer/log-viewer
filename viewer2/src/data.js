@@ -28,6 +28,8 @@ export async function getSources(serverURL) {
               return {
                 ...log,
                 id: `${source.id}|${log.name}`,
+                compact: source.compact,
+                transformers: source.transformers,
                 parent: {
                   type: source.type,
                   name: source.name,
@@ -66,13 +68,17 @@ export async function getLog(serverURL, transformers, forSource) {
   }
 
   const txt = await res.text();
-  const log = cache.logs[forSource.id] || {
-    src: forSource,
-    lines: [],
-    view: {
-      compact: makeCompact(),
-    },
-    fetchedAt: now,
+  let log = cache.logs[forSource.id];
+  if(!log) {
+    log = {
+      src: forSource,
+      lines: [],
+      view: {
+        compact: makeCompact(),
+      },
+      fetchedAt: now,
+    };
+    if(forSource.compact) log.view.compact.set(true);
   };
   makeLog(forSource.name, transformers, txt, log);
   cache.logs[forSource.id] = log;
