@@ -1,5 +1,5 @@
 <script>
-  import { current } from '../state.js';
+  import { current_log, log_fetching, log_fetching_error } from '../state.js';
   import { getSources, getLog } from '../data.js';
   import LoadingMessages from './LoadingMessages.svelte';
   import { loadingSources } from '../messages.js';
@@ -15,18 +15,18 @@
     if(!log) return;
     if(fetching[log.id]) return;
     fetching[log.id] = true;
-    $current.fetching = true;
-    $current.error = null;
+    $log_fetching = true;
+    $log_fetching_error = null;
     visible = false;
     try {
-      $current.log = await getLog(serverURL, source.transformers, log);
+      $current_log = await getLog(serverURL, source.transformers, log);
       delete fetching[log.id];
-      $current.fetching = false;
+      $log_fetching = false;
     } catch(e) {
       delete fetching[log.id];
-      $current.log = null;
-      $current.fetching = false;
-      $current.error = e;
+      $current_log = null;
+      $log_fetching = false;
+      $log_fetching_error = e;
     }
   }
 </script>
@@ -42,7 +42,7 @@
         {#each source.logs as log (log.id)}
           <li>
             <a href="#{log.id}" on:click|preventDefault={e => loadCurrent(source, log)} on:keydown|preventDefault={e => loadCurrent(log)}>
-              {#if $current.log && log.id == $current.log.src.id}
+              {#if $current_log && log.id == $current_log.src.id}
                 <span class="selected">{log.name} &rarr;</span>
               {:else}
                 {log.name}

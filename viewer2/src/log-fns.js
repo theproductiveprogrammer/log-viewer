@@ -284,7 +284,6 @@ export function hasNfo(nfo) {
 
 export function transform(transformers, lines) {
   if(!transformers || !lines) return lines;
-  console.log(lines);
   let i = 0;
   return lines.map(l => {
     let txt = l.txt;
