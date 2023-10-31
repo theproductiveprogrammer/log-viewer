@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { cleanHtml } from './util.js';
 
 /*    problem/
  * we are given a large log text that we need to
@@ -55,17 +56,41 @@ export default function makeLog(name, transformers, txt, log) {
     }
   }
 
+  xtractXcptions(log);
+
   log._optim = optim;
   return log;
+}
+
+/*    way/
+ * check if the line message looks like an exception.
+ * If it does, spit it into the key " at XXX" and
+ * other lines.
+ */
+function xtractXcptions(log) {
+  if(!log || !log.lines) return;
+  log.lines.forEach(l => {
+    if(l.nfo.level != 'ERROR' && l.nfo.level !== 'EXCEPTION' && l.nfo.level !== 'WARN' && l.nfo.level !== 'WARNING') return;
+    const txt = l.nfo.msg;
+    if(txt.indexOf('\n') === -1) return;
+    if(txt.search(/exception|error/i) === -1) return;
+
+    const p = txt.split(/[\r\n \t]*at /g);
+    if(p.length > 1) {
+      l.nfo.msg = cleanHtml(p.shift());
+      l.nfo.exception = p.map(l => {
+        let ndx = l.search(/[\r\n]/);
+        if(ndx == -1) return { at: "at " + l, txt: "" };
+        else return { at: l.substring(0, ndx), txt: l.substring(ndx+1) };
+      });
+    }
+  });
 }
 
 /*    way
  * split the text into lines and gather them,
  * joining what obviously look like continuations
  * (lines starting with whitespace, or tiny lines).
- * When joining lines, if the log looks like it
- * was an exception, we add the exception message
- * again to make it easier to process.
  */
 export function txt2Lines(txt) {
   if(!txt) return null;
@@ -76,12 +101,7 @@ export function txt2Lines(txt) {
     if(!c) continue;
     if(lines.length && is_probably_attached_to_previous_line(c)) {
       const last_ = lines[lines.length-1].txt;
-      if(looks_like_start_of_exception_1(last_) && lines.length > 1) {
-        const ex = lines.pop().txt + "\n" + c;
-        lines[lines.length-1].txt += "\n" + ex;
-      } else {
-        lines[lines.length-1].txt += "\n" + c;
-      }
+      lines[lines.length-1].txt += "\n" + c;
     } else {
       lines.push({
         txt: c,
@@ -93,14 +113,6 @@ export function txt2Lines(txt) {
 
   function is_probably_attached_to_previous_line(txt) {
     return txt.length < 8 || txt.startsWith(" ") || txt.startsWith("\t");
-  }
-
-  function looks_like_start_of_exception_1(txt) {
-    if(!txt) return false;
-    if(is_probably_attached_to_previous_line(txt)) return false;
-    if(txt.indexOf('\n') !== -1) return false;
-    if(txt.search(/exception|error/i) === -1) return false;
-    return true;
   }
 }
 
@@ -315,12 +327,10 @@ export function str2rx(str) {
   if(str.startsWith('/')) {
     const ndx = str.lastIndexOf('/');
     if(ndx) {
-      str = new RegExp(str.substring(1, ndx), str.substring(ndx+1));
-    } else {
-      str = new RegExp(str);
+      return new RegExp(str.substring(1, ndx), str.substring(ndx+1));
     }
   }
-  return str;
+  return new RegExp(str);
 }
 
 export function rx_ify(transformers) {
@@ -329,8 +339,7 @@ export function rx_ify(transformers) {
     try {
       const transform = { match: str2rx(t.match), find: str2rx(t.find), replace: t.replace };
       if(!transform.replace) {
-        console.error("Invalid or missing `replace:` key", t);
-        return;
+        transform.replace = "";
       }
       if(!transform.find) {
         console.error("Invalid or missing `find:` key", t);

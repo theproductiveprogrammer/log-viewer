@@ -3,7 +3,9 @@
 
   import { DateTime } from 'luxon';
   import { hasNfo } from '../log-fns.js';
+  import { copyToClipboard } from '../util.js';
   import AfterInfo from './AfterInfo.svelte';
+  import ShowException from './ShowException.svelte';
 
   import JSONTree from 'svelte-json-tree';
 
@@ -13,9 +15,15 @@
   let raw = false;
   $: compact = view.compact;
   $: full = ! $compact;
+
+  function toggleRaw() {
+    raw = !raw;
+    copyToClipboard(line.txt);
+  }
+
 </script>
 
-<div class="log-line" class:plain={raw || !hasNfo(line.nfo)} on:dblclick|preventDefault={e => raw = !raw} role="none">
+<div class="log-line" class:plain={raw || !hasNfo(line.nfo)} on:dblclick|preventDefault={toggleRaw} role="none">
   {#if raw}
     <div class="log-line-txt-cont">
     <div class="log-line-txt">{line.txt}</div>
@@ -43,7 +51,12 @@
   {#if full && hasNfo(line.nfo)}
 
     <div class="log-line-info">
-      <div class="log-line-msg">{line.nfo.msg}
+      <div class="log-line-msg">
+        {#if line.nfo.exception }
+          <ShowException msg={line.nfo.msg} exception={line.nfo.exception} />
+        {:else}
+          {line.nfo.msg}
+        {/if}
         {#if line.nfo.json}
           <div class="log-json-tree">
           <JSONTree value={line.nfo.json} />
@@ -116,10 +129,9 @@
   }
   .log-line.plain {
     margin-top: 0.5em;
-  }
-  .log-line.plain {
     font-size: 0.9em;
     background: #efefef;
+    white-space: pre;
   }
   .log-line-hdr {
     width: var(--meta-size);
