@@ -32,11 +32,11 @@
 
 <div class="log-line" 
      class:full class:found class:notfound class:plain={raw || !hasNfo(line.nfo)}
-     on:dblclick|preventDefault={toggleRaw}
      out:slide
      role="none">
   {#if raw}
-    <div class="log-line-txt-cont">
+    <div class="log-line-txt-cont"
+         on:dblclick|preventDefault={toggleRaw}>
     <div class="log-line-txt">{line.txt}</div>
     </div>
   {:else}
@@ -59,7 +59,8 @@
 
   {#if full && hasNfo(line.nfo)}
 
-    <div class="log-line-info">
+    <div class="log-line-info"
+         on:dblclick|preventDefault={toggleRaw}>
       <div class="log-line-msg">
         {#if line.nfo.exception }
           <ShowException msg={line.nfo.msg} exception={line.nfo.exception} />
@@ -89,7 +90,7 @@
     </div>
 
   {:else}
-    <div class="log-line-txt">{line.txt}</div>
+    <div class="log-line-txt" on:dblclick|preventDefault={toggleRaw}>{line.txt}</div>
   {/if}
   {/if}
 
