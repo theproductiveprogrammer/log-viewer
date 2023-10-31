@@ -15,3 +15,7 @@ export function makeNumlines() {
 export function makeFilters() {
   return new writable([]);
 }
+
+export function makeSearch() {
+  return new writable("");
+}

@@ -16,6 +16,13 @@
   $: compact = view.compact;
   $: full = ! $compact;
 
+  let found;
+  let notfound;
+  view.search.subscribe(s => {
+    found = line.found === true;
+    notfound = line.found === false;
+  });
+
   function toggleRaw() {
     raw = !raw;
     copyToClipboard(line.txt);
@@ -23,7 +30,11 @@
 
 </script>
 
-<div class="log-line" class:full class:plain={raw || !hasNfo(line.nfo)} on:dblclick|preventDefault={toggleRaw} role="none">
+<div class="log-line" 
+     class:full class:found class:notfound class:plain={raw || !hasNfo(line.nfo)}
+     on:dblclick|preventDefault={toggleRaw}
+     out:slide
+     role="none">
   {#if raw}
     <div class="log-line-txt-cont">
     <div class="log-line-txt">{line.txt}</div>
@@ -173,5 +184,12 @@
     padding-bottom: 4px;
     padding-left: 8px;
     font-size: 0.9em;
+  }
+  .found {
+    font-weight: bold;
+    background: #eef;
+  }
+  .notfound {
+    opacity: 0.5;
   }
 </style>

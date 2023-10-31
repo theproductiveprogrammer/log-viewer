@@ -6,15 +6,17 @@
 
   import { current_log } from '../state.js';
 
-  import { applyNumlines, applyFilters } from '../log-fns.js';
+  import { applyNumlines, applyFilters, applySearch } from '../log-fns.js';
 
   let log;
   let numlines;
   let filters;
+  let search;
   let lines;
 
   let numlines_release;
   let filters_release;
+  let search_release;
   let current_log_release = current_log.subscribe(v1 => {
     log = v1;
     if(numlines_release) numlines_release();
@@ -28,9 +30,15 @@
       applyFilters(log, filters);
       lines = applyNumlines(log, numlines);
     });
+    search_release = log.view.search.subscribe(v4 => {
+      search = v4;
+      applySearch(log, search);
+      lines = applyNumlines(log, numlines);
+    });
   });
 
   onDestroy((v) => {
+    if(search_release) search_release();
     if(filters_release) filters_release();
     if(numlines_release) numlines_release();
     if(current_log_release) current_log_release();
@@ -40,7 +48,7 @@
 <div class="log-viewer">
   <div class="log-name">{log.src.name}</div>
   <Toolbar log={log} />
-  <FilterList log={log} />
+  <FilterList log={log} filters={log.view.filters} />
   <div class="log-viewer-lines">
   {#each lines as line (log.src.id + line.num)}
     <LogLine {line} view={log.view} />

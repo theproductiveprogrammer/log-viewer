@@ -420,3 +420,20 @@ export function addFilter(type, val, log) {
   });
 }
 
+export function setSearch(val, log) {
+  log.view.search.set(rx_ify_or_str(val));
+}
+
+
+/*    way/
+ * walk through the log lines, applying search
+ * or clearing it.
+ */
+export function applySearch(log, search) {
+  console.log('applying search');
+  if(!log.lines) return;
+  log.lines.forEach(line => {
+    if(search) line.found = search.test(line.txt);
+    else delete line.found;
+  });
+}

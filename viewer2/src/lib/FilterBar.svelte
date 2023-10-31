@@ -1,5 +1,5 @@
 <script>
-  import { addFilter } from '../log-fns.js';
+  import { addFilter, setSearch } from '../log-fns.js';
 
   export let log;
 
@@ -7,6 +7,7 @@
   let keep;
 
   function filter() {
+    setSearch(null, log);
     addFilter('-', hide, log);
     addFilter('+', keep, log);
     hide = "";
@@ -16,12 +17,20 @@
   function enterH(e) {
     if(e.key === 'Enter') filter();
   }
+
+  let searcher;
+  function search(e) {
+    if(searcher) clearTimeout(searcher);
+    const v = e.target.value || "";
+    const tm = v.length > 2 ? 500 : 1500;
+    searcher = setTimeout(() => setSearch(v, log), tm);
+  }
 </script>
 
 
 <div class="log-search-bar">
-  <div>Hide: <input type="text" bind:value={hide} on:keydown={enterH}></div>
-  <div>Keep: <input type="text" bind:value={keep} on:keydown={enterH}></div>
+  <div>Hide: <input type="text" bind:value={hide} on:keydown={enterH} on:keyup={search}></div>
+  <div>Keep: <input type="text" bind:value={keep} on:keydown={enterH} on:keyup={search}></div>
   <button on:click={filter}>Go</button>
 </div>
 
