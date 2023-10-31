@@ -26,8 +26,8 @@
 </script>
 
 <div class="log-viewer">
-  <Toolbar log={log} />
   <div class="log-name">{log.src.name}</div>
+  <Toolbar log={log} />
   <div class="log-viewer-lines">
   {#each lines as line (log.src.id + line.num)}
     <LogLine {line} view={log.view} />
@@ -41,9 +41,10 @@
     height: 100vh;
   }
   .log-name {
-    text-align: right;
-    margin-bottom: 12px;
-    margin-right: 1em;
+    background: #efefff;
+    text-align: center;
+    padding: 8px 0;
+    margin: 12px 0;
     font-weight: 600;
     font-size: 0.9em;
   }
