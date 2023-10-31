@@ -20,14 +20,18 @@
 </script>
 
 <div class="log-after-info">
-  {#if info.hours}
-    <div class="log-after-hours">{tm(info)}</div>
-  {:else if info.minutes}
-    <div class="log-after-mins">{tm(info)}</div>
-  {:else if info.seconds}
-    <div class="log-after-secs">{tm(info)}</div>
-  {:else if info.milliseconds}
-    <div class="log-after-ms">{tm(info)}</div>
+  {#if info}
+    {#if info.hours}
+      <div class="log-after-hours">{tm(info)}</div>
+    {:else if info.minutes}
+      <div class="log-after-mins">{tm(info)}</div>
+    {:else if info.seconds}
+      <div class="log-after-secs">{tm(info)}</div>
+    {:else if info.milliseconds}
+      <div class="log-after-ms">{tm(info)}</div>
+    {/if}
+  {:else}
+    <div class="log-after-none">&nbsp;</div>
   {/if}
 </div>
 
@@ -53,5 +57,8 @@
     font-size: 1.2em;
     font-weight: bold;
     color: #900;
+  }
+  .log-after-none {
+    font-size: 0.7em;
   }
 </style>

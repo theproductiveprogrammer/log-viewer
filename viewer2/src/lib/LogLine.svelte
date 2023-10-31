@@ -42,9 +42,7 @@
   <div class="log-mark-cont">
     <div class="log-mark">
       <input type="checkbox">
-      {#if line.nfo && line.nfo.after}
-        <AfterInfo info={line.nfo.after} />
-      {/if}
+      <AfterInfo info={line.nfo && line.nfo.after} />
     </div>
   </div>
 
