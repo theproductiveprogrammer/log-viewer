@@ -100,6 +100,10 @@
     width: calc(100% - var(--mark-size) - var(--meta-size));
     overflow: scroll;
   }
+  .log-line.plain .log-line-txt {
+    width: 100%;
+    overflow: auto;
+  }
   .log-mark-cont {
     font-size: 0.8em;
     width: var(--mark-size);
