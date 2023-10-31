@@ -4,6 +4,7 @@
   import LoadingMessages from './LoadingMessages.svelte';
   import { loadingSources } from '../messages.js';
   import { slide } from 'svelte/transition';
+  import { cap } from '../util.js';
 
   export let serverURL;
 
@@ -36,8 +37,9 @@
 {:then sources}
   {#if visible}
     <div class="source-list" transition:slide={{axis:'x'}} >
+      <div class="close" on:click={e => visible = false}>x</div>
       {#each sources as source (source.id)}
-        <div class="source-name">{source.name}</div>
+        <div class="source-name">{cap(source.name)}</div>
         <ul>
         {#each source.logs as log (log.id)}
           <li>
@@ -62,6 +64,23 @@
 {/await}
 
 <style>
+  .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 8px;
+    padding: 6px;
+    line-height: 6px;
+    border-radius: 50%;
+    border: 1px solid #eee;
+    color: #999;
+    font-size: 0.8em;
+    cursor: pointer;
+  }
+  .close:hover {
+    background: #eee;
+    color: #009;
+  }
   .source-placeholder {
     display: block;
     width: 100%;
@@ -90,7 +109,7 @@
     background: white;
     padding: 2em;
     padding-left: 1.6em;
-    padding-top: 0;
+    padding-top: 12px;
     box-shadow: 0 0 1px #666;
   }
   .source-name {
@@ -109,7 +128,7 @@
   }
   ul {
     list-style-type: none;
-    margin-left: 4px;
+    margin-left: 12px;
   }
   a {
     display: block;

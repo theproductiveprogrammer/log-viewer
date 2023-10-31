@@ -29,3 +29,12 @@ export async function copyToClipboard(textToCopy) {
 export function cleanHtml(txt) {
     return txt.replace(/<\/?[^>]+>/g, "");
 }
+
+/*      understand/
+ * capitalize first letter if all in lowercase
+ */
+export function cap(txt) {
+    if(!txt) return txt;
+    if(txt.toLowerCase() != txt) return txt;
+    return txt.substring(0,1).toUpperCase() + txt.substring(1);
+}
