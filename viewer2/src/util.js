@@ -62,3 +62,7 @@ export function rx_ify_or_str(search) {
   return null;
 }
 
+export function scrollToTop(e) {
+  if(!e) return;
+  e.scroll({ top: 0, behavior: "smooth" });
+}

@@ -7,12 +7,14 @@
   import { current_log } from '../state.js';
 
   import { applyNumlines, applyFilters, applySearch } from '../log-fns.js';
+  import { scrollToTop } from '../util.js';
 
   let log;
   let numlines;
   let filters;
   let search;
   let lines;
+  let cont;
 
   let numlines_release;
   let filters_release;
@@ -24,6 +26,7 @@
     numlines_release = log.view.numlines.subscribe(v2 => {
       numlines = v2;
       lines = applyNumlines(log, numlines);
+      scrollToTop(cont);
     });
     filters_release = log.view.filters.subscribe(v3 => {
       filters = v3;
@@ -50,7 +53,7 @@
   <div class="log-name">{log.src.name}</div>
   <Toolbar log={log} />
   <FilterList log={log} filters={log.view.filters} />
-  <div class="log-viewer-lines">
+  <div class="log-viewer-lines" bind:this={cont}>
   {#each lines as line (log.src.id + line.num)}
     <LogLine {line} view={log.view} />
   {/each}

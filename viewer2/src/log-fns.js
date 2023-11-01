@@ -353,6 +353,28 @@ export function rx_ify(transformers) {
   return ret;
 }
 
+/*    way/
+ * walk backwards through the log lines, incrementing
+ * the numlines that have not been filtered out, until
+ * we reach on (or before) the given number.
+ */
+export function adjustNumlinesTill(num, log) {
+  try {
+    num = parseInt(num);
+  } catch(e) { /* ignore */ }
+  if(isNaN(num)) return;
+  if(num < 1) return;
+  if(!log.lines) return;
+
+  let numlines = 1;
+  for(let i = log.lines.length-1;i >= 0;i--) {
+    const line = log.lines[i];
+    if(line.num <= num) break;
+    if(!line.x) numlines++;
+  }
+
+  log.view.numlines.set(numlines);
+}
 
 /*    way/
  * walk backwards through the log lines, gathering `numlines`
@@ -437,3 +459,4 @@ export function applySearch(log, search) {
     else delete line.found;
   });
 }
+

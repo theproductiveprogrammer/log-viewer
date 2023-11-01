@@ -3,6 +3,7 @@
   import NumLines from './NumLines.svelte';
   import FilterBar from './FilterBar.svelte';
   import CopyToClipboard from './CopyToClipboard.svelte';
+  import GoToLine from './GoToLine.svelte';
 
   export let log;
 
@@ -12,7 +13,7 @@
   <div class="log-toolbar-leftpane">
     <CopyToClipboard log={log} />
     <NumLines log={log} />
-
+    <GoToLine log={log} />
   </div>
   <div class="log-toolbar-rightpane">
     <FilterBar log={log} />
