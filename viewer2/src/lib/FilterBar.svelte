@@ -22,7 +22,7 @@
   function search(e) {
     if(searcher) clearTimeout(searcher);
     const v = e.target.value || "";
-    const tm = v.length > 2 ? 500 : 1500;
+    const tm = v.length > 2 ? 350 : 1500;
     searcher = setTimeout(() => setSearch(v, log), tm);
   }
 </script>

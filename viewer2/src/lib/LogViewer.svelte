@@ -52,7 +52,7 @@
 <div class="log-viewer">
   <div class="log-name">{log.src.name}</div>
   <Toolbar log={log} />
-  <FilterList log={log} filters={log.view.filters} />
+  <FilterList log={log} />
   <div class="log-viewer-lines" bind:this={cont}>
   {#each lines as line (log.src.id + line.num)}
     <LogLine {line} view={log.view} />

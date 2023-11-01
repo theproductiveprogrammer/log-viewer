@@ -452,7 +452,6 @@ export function setSearch(val, log) {
  * or clearing it.
  */
 export function applySearch(log, search) {
-  console.log('applying search');
   if(!log.lines) return;
   log.lines.forEach(line => {
     if(search) line.found = search.test(line.txt);
