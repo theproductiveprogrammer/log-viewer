@@ -7,6 +7,8 @@
   import LogViewer from './LogViewer.svelte';
   import ToolBar from './ToolBar.svelte';
 
+  import LogViewerBg from '../assets/log-viewer-bg.svelte';
+
 </script>
 
 {#key $current_log}
@@ -21,6 +23,10 @@
 {/if}
 {#if $current_log}
   <LogViewer />
+{:else}
+  <div class="bg">
+    <LogViewerBg />
+  </div>
 {/if}
 
 <style>
@@ -31,5 +37,13 @@
     color: red;
     border: 1px solid #ccc;
     padding: 8px;
+  }
+  .bg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: calc(100vh - 100px);
+    opacity: 0.16;
   }
 </style>
