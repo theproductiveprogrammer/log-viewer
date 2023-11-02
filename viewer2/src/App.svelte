@@ -20,8 +20,13 @@
     font-family: 'Rouge Script', cursive;
     font-size: 24px;
     text-align: center;
+    padding: 0px;
+    background: #efefff;
+  }
+@media (prefers-color-scheme: light) {
+  h1 {
     background: #333;
     color: #eef;
-    padding: 0px;
   }
+}
 </style>

@@ -77,7 +77,7 @@ function xtractXcptions(log) {
   if(!log || !log.lines) return;
   log.lines.forEach(l => {
     if(l.nfo.level != 'ERROR' && l.nfo.level !== 'EXCEPTION' && l.nfo.level !== 'WARN' && l.nfo.level !== 'WARNING') return;
-    const txt = l.nfo.msg;
+    const txt = l.nfo.msg || "";
     if(txt.indexOf('\n') === -1) return;
     if(txt.search(/exception|error/i) === -1) return;
 
