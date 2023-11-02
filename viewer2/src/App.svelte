@@ -14,4 +14,12 @@
 </main>
 
 <style>
+  h1 {
+    font-family: 'Rouge Script', cursive;
+    font-size: 24px;
+    text-align: center;
+    background: #333;
+    color: #eef;
+    padding: 0px;
+  }
 </style>

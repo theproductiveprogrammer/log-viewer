@@ -15,7 +15,7 @@
 
 <div class="log-viewer-toolbar">
   <div class="log-toolbar-leftpane">
-    <OpenSources />
+    <OpenSources log={$log} />
     <CopyToClipboard log={$log} />
     <NumLines log={$log} />
     <GoToLine log={$log} />
@@ -33,6 +33,9 @@
 </div>
 
 <style>
+  .log-viewer-toolbar {
+    box-shadow: 0 1px 2px #9E9E9E;
+  }
   .log-toolbar-leftpane,
   .log-toolbar-rightpane {
     position: relative;
@@ -48,8 +51,8 @@
     align-items: center;
     justify-content: space-around;
     justify-content: space-between;
-    margin: 0 1em;
-    padding-bottom: 12px;
+    margin: 0;
+    padding: 8px 1em;
   }
   .log-toolbar-compact {
     display: flex;

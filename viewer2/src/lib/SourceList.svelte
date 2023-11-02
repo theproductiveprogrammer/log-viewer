@@ -54,9 +54,6 @@
         </ul>
       {/each}
     </div>
-  {:else}
-    <div class="source-placeholder">&nbsp;</div>
-    <div class="source-panel" on:click={e => $open_sources = true} on:keydown={e => $open_sources = true}>Sources</div>
   {/if}
 {:catch error}
   <div class="log-error">{error.message}</div>
