@@ -14,7 +14,7 @@
 
   let timer;
   if(!log) {
-    timer = setInterval(() => animate__bounce = ! animate__bounce, 5000);
+    timer = setInterval(() => animate__bounce = ! animate__bounce, 3000);
   }
   onDestroy((v) => clearInterval(timer));
 
