@@ -3,7 +3,7 @@
   import LogLine from './LogLine.svelte';
   import FilterList from './FilterList.svelte';
 
-  import { current_log } from '../state.js';
+  import { current_log, top_line } from '../state.js';
 
   import { applyNumlines, applyFilters, applySearch } from '../log-fns.js';
   import { scrollToTop } from '../util.js';
@@ -24,20 +24,28 @@
     if(filters_release) filters_release();
     numlines_release = log.view.numlines.subscribe(v2 => {
       numlines = v2;
-      lines = applyNumlines(log, numlines);
+      setLines();
       scrollToTop(cont);
     });
     filters_release = log.view.filters.subscribe(v3 => {
       filters = v3;
       applyFilters(log, filters);
-      lines = applyNumlines(log, numlines);
+      setLines();
     });
     search_release = log.view.search.subscribe(v4 => {
       search = v4;
       applySearch(log, search);
-      lines = applyNumlines(log, numlines);
+      setLines();
     });
   });
+
+  function setLines() {
+    lines = applyNumlines(log, numlines);
+    if(!lines || !lines.length) top_line.set(null);
+    else {
+      top_line.set(lines[0].num);
+    }
+  }
 
   onDestroy((v) => {
     if(search_release) search_release();

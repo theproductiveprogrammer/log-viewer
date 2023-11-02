@@ -1,4 +1,5 @@
 <script>
+  import { top_line } from '../state.js';
   import { adjustNumlinesTill } from '../log-fns.js';
 
   export let log;
@@ -19,7 +20,7 @@
 
 <div class="log-line-goto-cont" class:disabled>
   <div class="log-line-goto-label">
-    Goto line: <input type="number" {disabled} bind:value={num} on:keydown={enterH}/>
+    Goto line: <input placeholder={$top_line} type="number" {disabled} bind:value={num} on:keydown={enterH}/>
   </div>
   <button {disabled} on:click={gotoLine}>Go</button>
 </div>
