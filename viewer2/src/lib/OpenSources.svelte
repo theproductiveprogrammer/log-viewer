@@ -10,7 +10,7 @@
   $: tb_active = log;
 
 
-  $: animate__bounce = !log && !$open_sources;
+  let animate__bounce = false;
 
   let timer;
   if(!log) {
@@ -23,7 +23,7 @@
     animate__bounce = false;
     clearInterval(timer);
     timer = null;
-    $open_sources = true
+    $open_sources = !$open_sources;
   }
 
 </script>

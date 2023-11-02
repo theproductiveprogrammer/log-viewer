@@ -84,7 +84,7 @@
   }
   .source-list, .source-panel {
     position: absolute;
-    top: 55px;
+    top: 84px;
     z-index: 1000;
     box-shadow: 0 0 1px #666;
   }
