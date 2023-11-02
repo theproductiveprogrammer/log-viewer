@@ -3,10 +3,13 @@
 
   export let log;
 
+  $: disabled = !log;
+
   let hide;
   let keep;
 
   function filter() {
+    if(disabled) return;
     setSearch(null, log);
     addFilter('-', hide, log);
     addFilter('+', keep, log);
@@ -20,6 +23,7 @@
 
   let searcher;
   function search(e) {
+    if(disabled) return;
     if(searcher) clearTimeout(searcher);
     const v = e.target.value || "";
     const tm = v.length > 2 ? 350 : 1500;
@@ -28,10 +32,10 @@
 </script>
 
 
-<div class="log-search-bar">
-  <div>Hide: <input type="text" bind:value={hide} on:keydown={enterH} on:keyup={search}></div>
-  <div>Keep: <input type="text" bind:value={keep} on:keydown={enterH} on:keyup={search}></div>
-  <button on:click={filter}>Go</button>
+<div class="log-search-bar" class:disabled>
+  <div>Hide: <input type="text" {disabled} bind:value={hide} on:keydown={enterH} on:keyup={search}></div>
+  <div>Keep: <input type="text" {disabled} bind:value={keep} on:keydown={enterH} on:keyup={search}></div>
+  <button {disabled} on:click={filter}>Go</button>
 </div>
 
 <style>
@@ -66,5 +70,8 @@
     border-radius: 4px;
     width: 6em;
     font-size: 0.9em;
+  }
+  .log-search-bar.disabled {
+    opacity: 0.2;
   }
 </style>

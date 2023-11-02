@@ -2,25 +2,45 @@
   import { onDestroy } from 'svelte';
 
   export let log;
-  let totlines;
 
-  $: numlines = log.view.numlines;
-  $: filters = log.view.filters;
-  $: {
-    totlines = log.lines.filter(l => !l.x).length;
-    $filters = $filters;
+  let numlines = "-";
+  let totlines = "-";
+  let disabled = true;
+
+  let numlines_release;
+  let filters_release;
+  if(log) {
+    disabled = false;
+    if(numlines_release) numlines_release();
+    numlines_release = log.view.numlines.subscribe(v => numlines = v);
+    filters_release = log.view.filters.subscribe(v => {
+      totlines = log.lines.filter(l => !l.x).length;
+    });
   }
 
+  onDestroy(() => {
+    if(numlines_release) numlines_release();
+    if(filters_release) filters_release();
+  });
+
+  function addPage() {
+    if(log && numlines) {
+      log.view.numlines.set(numlines + 10);
+    }
+  }
 </script>
 
-<div class="log-toolbar-numlines">
-  Showing <input type=number bind:value={$numlines} /> of {totlines}
-  <a on:click|preventDefault={e => $numlines += 10}>+10</a>
+<div class="log-toolbar-numlines" class:disabled>
+  Showing <input {disabled} type=number bind:value={numlines} /> of {totlines}
+  <a on:click|preventDefault={addPage}>+10</a>
 </div>
 
 <style>
   .log-toolbar-numlines {
     font-size: 0.8em;
+  }
+  .log-toolbar-numlines.disabled {
+    opacity: 0.2;
   }
   a {
     font-weight: 500;
@@ -34,6 +54,13 @@
   a:hover {
     text-decoration: underline;
   }
+  .log-toolbar-numlines.disabled a {
+    cursor: default;
+  }
+  .log-toolbar-numlines.disabled a:hover {
+    text-decoration: none;
+  }
+
   input {
     width: 4em;
     border: none;

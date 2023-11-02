@@ -5,8 +5,13 @@
   import LoadingMessages from './LoadingMessages.svelte';
   import { loadingLogs } from '../messages.js';
   import LogViewer from './LogViewer.svelte';
+  import ToolBar from './ToolBar.svelte';
 
 </script>
+
+{#key $current_log}
+<ToolBar />
+{/key}
 
 {#if $log_fetching}
   <LoadingMessages messages={loadingLogs} />

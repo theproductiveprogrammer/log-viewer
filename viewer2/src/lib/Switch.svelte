@@ -1,10 +1,11 @@
 <script>
   export let value;
+  export let disabled = false;
 </script>
 
 <!-- from https://www.w3schools.com/howto/howto_css_switch.asp -->
-<label class="switch">
-  <input type="checkbox" bind:checked={$value}/>
+<label class="switch" class:disabled>
+  <input type="checkbox" {disabled} bind:checked={$value}/>
   <span class="slider round"></span>
 </label>
 
@@ -15,7 +16,9 @@
     width: 32px;
     height: 16px;
   }
-
+  .switch.disabled {
+    opacity: 0.2;
+  }
   .switch input { 
     opacity: 0;
     width: 0;

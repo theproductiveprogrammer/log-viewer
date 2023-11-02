@@ -4,7 +4,10 @@
   export let log;
   let num;
 
+  $: disabled = !log;
+
   function gotoLine() {
+    if(disabled) return;
     if(num) adjustNumlinesTill(num, log);
     num = "";
   }
@@ -14,11 +17,11 @@
   }
 </script>
 
-<div class="log-line-goto-cont">
+<div class="log-line-goto-cont" class:disabled>
   <div class="log-line-goto-label">
-    Goto line: <input type="number" bind:value={num} on:keydown={enterH}/>
+    Goto line: <input type="number" {disabled} bind:value={num} on:keydown={enterH}/>
   </div>
-  <button on:click={gotoLine}>Go</button>
+  <button {disabled} on:click={gotoLine}>Go</button>
 </div>
 
 <style>
@@ -53,5 +56,11 @@
     border-radius: 4px;
     width: 6em;
     font-size: 0.9em;
+  }
+  .log-line-goto-cont.disabled {
+    opacity: 0.2;
+  }
+  .log-line-goto-cont.disabled button {
+    cursor: default;
   }
 </style>

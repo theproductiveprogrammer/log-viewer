@@ -1,24 +1,33 @@
 <script>
+  import { readable } from 'svelte/store';
+  let dummy = readable();
+
+  import { current_log as log } from '../state.js';
+
   import Switch from './Switch.svelte';
   import NumLines from './NumLines.svelte';
   import FilterBar from './FilterBar.svelte';
   import CopyToClipboard from './CopyToClipboard.svelte';
   import GoToLine from './GoToLine.svelte';
-
-  export let log;
+  import OpenSources from './OpenSources.svelte';
 
 </script>
 
 <div class="log-viewer-toolbar">
   <div class="log-toolbar-leftpane">
-    <CopyToClipboard log={log} />
-    <NumLines log={log} />
-    <GoToLine log={log} />
+    <OpenSources />
+    <CopyToClipboard log={$log} />
+    <NumLines log={$log} />
+    <GoToLine log={$log} />
   </div>
   <div class="log-toolbar-rightpane">
-    <FilterBar log={log} />
+    <FilterBar log={$log} />
     <div class="log-toolbar-compact" >
-      <Switch value={log.view.compact}/>
+      {#if $log}
+      <Switch value={$log.view.compact} />
+      {:else}
+        <Switch value={dummy} disabled={true} />
+      {/if}
     </div>
   </div>
 </div>

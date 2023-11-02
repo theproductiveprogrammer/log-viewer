@@ -8,9 +8,12 @@
 
   export let log;
 
+  $: disabled = !log;
+
   let ping;
 
   async function copyAction() {
+    if(disabled) return;
     copyToClipboard(log.txt);
     ping = true;
     setTimeout(() => ping = false, 1000);
@@ -23,6 +26,7 @@
 <div
   class="log-toolbar-copy" class:ping
   on:click|preventDefault={e => copyAction()}
+  class:disabled
   title="click to copy">
   <CopyIcon />
 </div>
@@ -50,5 +54,11 @@
   .log-toolbar-copy.ping,
   .log-toolbar-copy.ping:hover {
     transform: scale(0.1);
+  }
+  .log-toolbar-copy.disabled:hover,
+  .log-toolbar-copy.disabled {
+    cursor: default;
+    transform: none;
+    opacity: 0.2;
   }
 </style>
