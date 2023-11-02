@@ -149,7 +149,7 @@
     margin-top: 0.5em;
     font-size: 0.9em;
     background: #efefef;
-    white-space: pre;
+    white-space: pre-wrap;
   }
   .log-line-hdr {
     width: var(--meta-size);
