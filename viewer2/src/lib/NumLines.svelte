@@ -14,7 +14,7 @@
     if(numlines_release) numlines_release();
     numlines_release = log.view.numlines.subscribe(v => numlines = v);
     filters_release = log.view.filters.subscribe(v => {
-      totlines = log.lines.filter(l => !l.x).length;
+      setTimeout(() => totlines = log.lines.filter(l => !l.x).length);
     });
   }
 
