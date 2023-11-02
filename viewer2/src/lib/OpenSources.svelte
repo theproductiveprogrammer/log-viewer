@@ -1,9 +1,11 @@
 <script>
   import OpenIcon from '../assets/open.svelte';
 
+  import { open_sources } from '../state.js';
+
 </script>
 
-<div class="log-toolbar-open">
+<div class="log-toolbar-open" on:click={e => $open_sources = true} >
   <OpenIcon />
 </div>
 

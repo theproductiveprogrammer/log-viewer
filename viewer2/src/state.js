@@ -19,3 +19,5 @@ export function makeFilters() {
 export function makeSearch() {
   return new writable("");
 }
+
+export const open_sources = writable(false);

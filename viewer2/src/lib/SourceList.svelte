@@ -1,5 +1,5 @@
 <script>
-  import { current_log, log_fetching, log_fetching_error } from '../state.js';
+  import { current_log, log_fetching, log_fetching_error, open_sources } from '../state.js';
   import { getSources, getLog } from '../data.js';
   import LoadingMessages from './LoadingMessages.svelte';
   import { loadingSources } from '../messages.js';
@@ -8,7 +8,6 @@
 
   export let serverURL;
 
-  let visible;
   let sourcesP = getSources(serverURL);
 
   let fetching = {}
@@ -18,7 +17,7 @@
     fetching[log.id] = true;
     $log_fetching = true;
     $log_fetching_error = null;
-    visible = false;
+    open_sources.set(false);
     try {
       $current_log = await getLog(serverURL, source.transformers, log);
       delete fetching[log.id];
@@ -35,9 +34,9 @@
 {#await sourcesP}
   <LoadingMessages messages={loadingSources} />
 {:then sources}
-  {#if visible}
+  {#if $open_sources}
     <div class="source-list" transition:slide={{axis:'x'}} >
-      <div class="close" on:click={e => visible = false}>x</div>
+      <div class="close" on:click={e => $open_sources = false}>x</div>
       {#each sources as source (source.id)}
         <div class="source-name">{cap(source.name)}</div>
         <ul>
@@ -57,7 +56,7 @@
     </div>
   {:else}
     <div class="source-placeholder">&nbsp;</div>
-    <div class="source-panel" on:click={e => visible = true} on:keydown={e => visible = true}>Sources</div>
+    <div class="source-panel" on:click={e => $open_sources = true} on:keydown={e => $open_sources = true}>Sources</div>
   {/if}
 {:catch error}
   <div class="log-error">{error.message}</div>
