@@ -83,7 +83,7 @@ export async function getLog(serverURL, transformers, forSource) {
     };
     if(forSource.compact) log.view.compact.set(true);
   };
-  makeLog(forSource.name, transformers, txt, log);
+  await makeLog(forSource.name, transformers, txt, log);
   cache.logs[forSource.id] = log;
   return log;
 }

@@ -16,7 +16,7 @@ import { cleanHtml, rx_ify_or_str } from './util.js';
  * and last number of the already parsed lines in an `_optim`
  * field so that we can compare it with the new text.
  */
-export default function makeLog(name, transformers, txt, log) {
+export default async function makeLog(name, transformers, txt, log) {
   log.txt = txt;
   let lines = txt2Lines(txt);
   lines = transform(transformers, lines);
@@ -37,7 +37,12 @@ export default function makeLog(name, transformers, txt, log) {
   log._optim = null;
 
   for(let i = start_num - 1;i < lines.length;i++) {
-    if(((i - (start_num - 1)) % 10000) == 0) console.log(`Parsing ${name}...   ${i}`);
+    if(((i - (start_num - 1)) % 500) == 0) {
+      await new Promise(res => setTimeout(() => res()));
+    }
+    if(((i - (start_num - 1)) % 10000) == 0) {
+      console.log(`Parsing ${name}...   ${i}`);
+    }
     const l = lines[i];
     const nfo = parseLine(l);
     const prev = log.lines.length ? log.lines[log.lines.length - 1] : null;
