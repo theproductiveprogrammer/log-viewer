@@ -1,16 +1,37 @@
 <script>
+  import { onDestroy } from 'svelte';
   import OpenIcon from '../assets/open.svelte';
-
-  export let log;
-
-  $: only = !log;
-  $: tb_active = log;
 
   import { open_sources } from '../state.js';
 
+  export let log;
+
+  $: only = !log && !$open_sources;
+  $: tb_active = log;
+
+
+  $: animate__bounce = !log && !$open_sources;
+
+  let timer;
+  if(!log) {
+    timer = setInterval(() => animate__bounce = ! animate__bounce, 5000);
+  }
+  onDestroy((v) => clearInterval(timer));
+
+
+  function openSources() {
+    animate__bounce = false;
+    clearInterval(timer);
+    timer = null;
+    $open_sources = true
+  }
+
 </script>
 
-<div class="log-toolbar-open" class:tb_active class:only on:click={e => $open_sources = true} >
+<div class="log-toolbar-open animate__animated"
+     class:animate__bounce
+     class:tb_active class:only
+     on:click={openSources} >
   <OpenIcon />
 </div>
 

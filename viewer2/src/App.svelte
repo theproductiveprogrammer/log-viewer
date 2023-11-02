@@ -2,6 +2,8 @@
   import SourceList from './lib/SourceList.svelte';
   import LogsViewer from './lib/LogsViewer.svelte';
 
+  import 'animate.css';
+
   export let serverURL;
 </script>
 
