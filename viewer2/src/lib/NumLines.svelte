@@ -38,6 +38,7 @@
 <style>
   .log-toolbar-numlines {
     font-size: 0.8em;
+    margin-left: 1em;
   }
   .log-toolbar-numlines.disabled {
     opacity: 0.2;

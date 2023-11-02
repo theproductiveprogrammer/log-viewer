@@ -17,8 +17,8 @@
   <div class="log-toolbar-leftpane">
     <OpenSources log={$log} />
     <CopyToClipboard log={$log} />
-    <NumLines log={$log} />
     <GoToLine log={$log} />
+    <NumLines log={$log} />
   </div>
   <div class="log-toolbar-rightpane">
     <FilterBar log={$log} />

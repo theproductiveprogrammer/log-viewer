@@ -30,8 +30,8 @@
     display: flex;
     flex-direction: row;
   }
-  .log-line-goto-cont div {
-    margin-left: 1em;
+  .log-line-goto-cont button {
+    margin-right: 1em;
   }
   button {
     border: none;
