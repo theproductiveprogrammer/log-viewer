@@ -1,6 +1,6 @@
 {
   "name": "log-viewer-backend",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Fetch logs and provide them to the main app",
   "main": "index.js",
   "type": "module",
