@@ -70,7 +70,7 @@
         {/if}
         {#if line.nfo.json}
           <div class="log-json-tree">
-          <JSONTree value={line.nfo.json} />
+            <JSONTree defaultExpandedLevel=1 value={line.nfo.json} />
           </div>
         {/if}
       </div>
