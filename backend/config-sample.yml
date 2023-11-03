@@ -9,15 +9,25 @@ log-viewer:
       password: cc03e747a6afbbcbf8be7668acfebee5
     - username: ...
       password: <<md5 of user+password>>
+  transformers:
+    java-transformers:
+      - match: com.r2.util.SQSUtil
+        find: /(Payload:.*), (messageId:.*)/
+        replace: $2,$1
+      - find: /at (com\.jashmore\..*\n|java\..*\n|com\.mashape\..*\n|org\.json\..*\n|org\.jasypt\..*\n)/g
+        replace: "..."
+    python-transformers:
+      - find: /\u001b\[[^m]*m/g
+        replace: ""
+    cpp-transformers:
+      - match: /error-code:9[0-9][0-9]/
+        find: /error_detail: (.*\)/
+        replace: ""
+
   sources:
     file:
       downloads:
-        transformers:
-          - match: com.giving.logs.to.flip.MyClass
-            find: /(Payload:.*), (messageId:.*)/
-            replace: $2,$1
-          - find: /at (com\.jashmore\..*\n|java\..*\n|com\.mashape\..*\n|org\.json\..*\n|org\.jasypt\..*\n)/g
-            replace: "..."
+        transformers: java-transformers
         folder: /Users/charleslobo/Downloads
         logs:
           - mylog1.log
@@ -29,12 +39,7 @@ log-viewer:
         user: ftpuser
         password: IlOveSeCreTs
         secure: true
-        transformers:
-          - match: /containing regexp/
-          - find: /\u001b\[[^m]*m/g
-            replace: ""
-          - find: /at (io\.micronaut\..*\n|reactor\.core\..*\n|io\.netty\..*\n)/g
-            replace: "..."
+        transformers: cpp-transformers
         logs:
           - aninteresting.log
           - another.log

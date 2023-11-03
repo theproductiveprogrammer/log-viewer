@@ -19,6 +19,7 @@ const cfg = YAML.parse(await readFile(cfgPath, {encoding: 'utf8'}))['log-viewer'
 const sources = sourceInfo(cfg.sources);
 if(!cfg.download || !cfg.download.folder) throw new Error("log-viewer.download.folder config parameter missing");
 if(!cfg.port) throw new Error("log-viewer.port config parameter missing");
+transformerify(cfg)
 await mkdir(cfg.download.folder, { recursive: true });
 
 /*    routing */
@@ -95,6 +96,7 @@ fastify.post('/log', async (req, res) => {
  */
 function sourceInfo(sources) {
   const infos = [];
+  if(!sources) return infos;
   for(let type in sources) {
     const s = sources[type];
     for(let name in s) {
@@ -107,7 +109,24 @@ function sourceInfo(sources) {
   return infos;
 }
 
+/*    understand/
+ * in the configuration we have a 'transformers' section
+ * that can be referenced in a source. We resolve this here
+ */
+function transformerify(cfg) {
+  if(!cfg.sources) return;
+  if(!cfg.transformers) cfg.transformers = {};
+  sources.forEach(source => {
+    if(source.transformers) {
+      const transformers = cfg.transformers[source.transformers];
+      if(!transformers) throw new Error(`Did not find transformer: ${source.transformers} referenced in: ${source.type}.${source.name}`);
+      source.transformers = transformers;
+    }
+  });
+}
 
+
+/**     authentication **/
 function login(cfg, user, pass) {
   if(!cfg || !cfg.users || !user || !pass) return false;
   user = user.trim();
