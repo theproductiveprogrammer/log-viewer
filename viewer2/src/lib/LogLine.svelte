@@ -1,6 +1,8 @@
 <script>
   import { fade,slide } from 'svelte/transition';
 
+  import { compact } from '../stores.js';
+
   import { DateTime } from 'luxon';
   import { hasNfo } from '../log-fns.js';
   import { copyToClipboard } from '../util.js';
@@ -13,7 +15,6 @@
   export let view;
 
   let raw = false;
-  $: compact = view.compact;
   $: full = ! $compact;
 
   let found;

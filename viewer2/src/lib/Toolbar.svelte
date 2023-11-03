@@ -2,7 +2,7 @@
   import { readable } from 'svelte/store';
   let dummy = readable();
 
-  import { current_log as log } from '../stores.js';
+  import { current_log as log, compact } from '../stores.js';
 
   import Switch from './Switch.svelte';
   import NumLines from './NumLines.svelte';
@@ -24,7 +24,7 @@
     <FilterBar log={$log} />
     <div class="log-toolbar-compact" >
       {#if $log}
-      <Switch value={$log.view.compact} />
+      <Switch value={compact} />
       {:else}
         <Switch value={dummy} disabled={true} />
       {/if}
