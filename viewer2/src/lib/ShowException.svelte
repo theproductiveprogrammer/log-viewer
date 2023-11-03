@@ -21,6 +21,11 @@
     font-weight: bold;
     color: #f33;
   }
+  .log-exception-txt {
+    color: #d66;
+    font-size: 1.2em;
+    font-weight: bold;
+  }
   .log-exception-stack {
     font-size: 0.7em;
   }

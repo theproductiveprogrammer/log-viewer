@@ -95,6 +95,7 @@ function xtractXcptions(log) {
       l.nfo.msg = cleanHtml(p.shift());
       l.nfo.exception = p.map(l => {
         let ndx = l.search(/[\r\n]/);
+        if(ndx == -1) ndx = l.search(/Caused by:/);
         if(ndx == -1) return { at: "at " + l, txt: "" };
         else return { at: l.substring(0, ndx), txt: l.substring(ndx+1) };
       });
