@@ -66,7 +66,7 @@
       <div class="log-login-error" transition:slide>{error}</div>
     {/if}
     <label for="name">Username: </label>
-    <input id="name" on:keydown={enterH} autocomplete="name" bind:value={name} bind:this={nameE} autofocus {disabled} type="text">
+    <input id="name" on:keydown={enterH} autocomplete="name" bind:value={name} bind:this={nameE} {disabled} type="text">
     <label for="password">Password: </label>
     <input id="password" on:keydown={enterH} bind:value={pass} bind:this={passE} {disabled} type="password">
     <button {disabled} on:click|preventDefault={onSubmit} on:keydown={enterH}>Submit</button>

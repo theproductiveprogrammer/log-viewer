@@ -12,6 +12,10 @@
       return `Keeping lines containing:`;
     }
   }
+
+  function enterH(e, cb) {
+    if(e.key === 'Enter') cb();
+  }
 </script>
 
 <div class="log-filter-list-cont">
@@ -20,7 +24,9 @@
     <div
       class="log-filter-line" class:neg={filter.type == '-'}
       on:click={() => removeFilter(log, $filters, filter)}
+      on:keydown={e => enterH(e, () => removeFilter(log, $filters, filter))}
       out:fade
+      role="none"
       >
       <span class="log-filter-type">{msg(filter)}</span>
       <span class="log-filter-val">"{filter.val}"</span>

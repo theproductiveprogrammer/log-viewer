@@ -20,14 +20,20 @@
     await tick;
   }
 
+  function enterH(e) {
+    if(e.key === 'Enter') copyAction();
+  }
+
 </script>
 
 
 <div
   class="log-toolbar-copy" class:ping
   on:click|preventDefault={e => copyAction()}
+  on:keydown={enterH}
   class:disabled
-  title="click to copy">
+  title="click to copy"
+  role="none">
   <CopyIcon />
 </div>
 {#if ping}

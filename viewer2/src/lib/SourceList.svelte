@@ -35,6 +35,10 @@
       $log_fetching_error = e;
     }
   }
+
+  function enterH(e) {
+    if(e.key === 'Enter') $open_sources = false;
+  }
 </script>
 
 {#await sourcesP}
@@ -42,7 +46,7 @@
 {:then sources}
   {#if $open_sources}
     <div class="source-list" transition:slide={{axis:'x'}} >
-      <div class="close" on:click={e => $open_sources = false}>x</div>
+      <div class="close" on:click={e => $open_sources = false} on:keydown={enterH} role="none">x</div>
       {#if sources}
       {#each sources as source (source.id)}
         <div class="source-name">{cap(source.name)}</div>
@@ -84,28 +88,6 @@
   .close:hover {
     background: #eee;
     color: #009;
-  }
-  .source-placeholder {
-    display: block;
-    width: 100%;
-    height: 2em;
-  }
-  .source-list, .source-panel {
-    position: absolute;
-    top: 84px;
-    z-index: 1000;
-    box-shadow: 0 0 1px #666;
-  }
-  .source-panel {
-    background: #333;
-    color: #eef;
-    -webkit-user-select: none;
-    user-select: none;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    padding-right: 8px;
-    font-size: 0.8em;
-    cursor: pointer;
   }
   .source-list {
     position: absolute;

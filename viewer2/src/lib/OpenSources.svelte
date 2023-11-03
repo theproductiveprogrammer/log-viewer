@@ -29,6 +29,10 @@
     $open_sources = !$open_sources;
   }
 
+  function enterH(e) {
+    if(e.key === 'Enter') openSources();
+  }
+
 </script>
 
 <div class="log-toolbar-open animate__animated"
@@ -36,7 +40,10 @@
      class:disabled
      class:tb_active class:only
      title="open logs"
-     on:click={openSources} >
+     on:click={openSources}
+     on:keydown={enterH}
+     role="none"
+     >
   <OpenIcon />
 </div>
 

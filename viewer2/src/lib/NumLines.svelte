@@ -28,11 +28,15 @@
       log.view.numlines.set(numlines + 10);
     }
   }
+
+  function enterH(e) {
+    if(e.key === 'Enter') addPage();
+  }
 </script>
 
 <div class="log-toolbar-numlines" class:disabled>
   Showing <input {disabled} type=number bind:value={numlines} /> of {totlines}
-  <a on:click|preventDefault={addPage}>+10</a>
+  <span on:click|preventDefault={addPage} on:keypress={enterH} role="none">+10</span>
 </div>
 
 <style>
@@ -43,7 +47,7 @@
   .log-toolbar-numlines.disabled {
     opacity: 0.2;
   }
-  a {
+  span {
     font-weight: 500;
     font-size: 0.8em;
     cursor: pointer;
@@ -52,13 +56,13 @@
     -webkit-user-select: none;
     user-select: none;
   }
-  a:hover {
+  span:hover {
     text-decoration: underline;
   }
-  .log-toolbar-numlines.disabled a {
+  .log-toolbar-numlines.disabled span {
     cursor: default;
   }
-  .log-toolbar-numlines.disabled a:hover {
+  .log-toolbar-numlines.disabled span:hover {
     text-decoration: none;
   }
 

@@ -37,7 +37,7 @@
      role="none">
   {#if raw}
     <div class="log-line-txt-cont"
-         on:dblclick|preventDefault={toggleRaw}>
+         on:dblclick|preventDefault={toggleRaw} role="none">
     <div class="log-line-txt">{line.orig?line.orig:line.txt}</div>
     </div>
   {:else}
@@ -62,7 +62,7 @@
   {#if full && hasNfo(line.nfo)}
 
     <div class="log-line-info"
-         on:dblclick|preventDefault={toggleRaw}>
+         on:dblclick|preventDefault={toggleRaw} role="none">
       <div class="log-line-msg">
         {#if line.nfo.exception }
           <ShowException msg={line.nfo.msg} exception={line.nfo.exception} />
@@ -92,7 +92,7 @@
     </div>
 
   {:else}
-    <div class="log-line-txt" on:dblclick|preventDefault={toggleRaw}>
+    <div class="log-line-txt" on:dblclick|preventDefault={toggleRaw} role="none">
       <span class="log-line-plain-msg">
         {#if line.nfo.exception }
           <ShowException msg={line.nfo.msg} exception={line.nfo.exception} />
