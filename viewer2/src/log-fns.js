@@ -136,11 +136,8 @@ function parseLine(line) {
     line_left: line.txt,
     curr_chunk: null,
   };
+  load_json(l);
   while(true) {
-    if(l.line_left.startsWith("{") || l.line_left.startsWith("[")) {
-      set_curr_json(l, 0, curr);
-      if(curr.json) break;
-    }
     if(!curr.date) curr.date = get_date_1(l);
     const chunk = get_chunk_1(l);
     if(!chunk && !l.line_left) {
@@ -160,31 +157,39 @@ function parseLine(line) {
     }
     curr.meta.push(chunk);
   }
-  if(!curr.json) {
-    const possibleJsonIndex = l.line_left.indexOf("{");
-    set_curr_json(l, possibleJsonIndex, curr);
-  }
-  if(!curr.json) {
-    const possibleJsonIndex = l.line_left.indexOf("[");
-    set_curr_json(l, possibleJsonIndex, curr);
-  }
   logline_from_json(curr);
   curr.msg = l.line_left;
   return curr;
 
-  function set_curr_json(l, possibleJsonIndex, curr) {
-    if(possibleJsonIndex == -1) return;
+  /*    understand/
+   * if the last character is '}' or ']' it could be a valid
+   * JSON so we look back to find the matching '{' or ']' and
+   * try and parse it.
+   */
+  function load_json(l) {
     if(!l.line_left) return;
-    try {
-      if(possibleJsonIndex) {
-        const possibleJson = l.line_left.substring(possibleJsonIndex).trim();
-        curr.json = JSON.parse(possibleJson);
-        l.line_left = l.line_left.substring(0, possibleJsonIndex);
-      } else {
-        curr.json = JSON.parse(l.line_left);
-        l.line_left = null;
+    let start;
+    if(l.line_left.endsWith('}')) {
+      load_json_1("{");
+    } else if(l.line_left.endsWith(']')) {
+      load_json_1("[");
+    }
+
+    function load_json_1(c) {
+      let s = -1;
+      while(true) {
+        s = l.line_left.indexOf(c, s+1);
+        if(s == -1) return;
+        try {
+          console.log('parsing', l.line_left.substring(s));
+          curr.json = JSON.parse(l.line_left.substring(s));
+          if(curr.json) {
+            l.line_left = l.line_left.substring(0, s);
+            return;
+          }
+        } catch(e) {/* ignore */}
       }
-    } catch(e) { /* */ }
+    }
   }
 
   function get_date_1(l) {
