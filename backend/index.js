@@ -1,5 +1,6 @@
 import path from 'path';
 import { mkdir, readFile } from 'node:fs/promises';
+const { createHash, } = await import('node:crypto');
 
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
@@ -20,6 +21,17 @@ if(!cfg.port) throw new Error("log-viewer.port config parameter missing");
 await mkdir(cfg.download.folder, { recursive: true });
 
 /*    routing */
+fastify.post('/login', async (req, res) => {
+  const username = req.body && req.body.username;
+  if(!req.body || !username || !req.body.password) {
+    req.log.info(`Login attempt for: "${username}" failed`);
+    return { error: "Login failed!" };
+  }
+  const ok = login(cfg, username, req.body.password);
+  req.log.info(`Login attempt for: ${username} ${ok ? "ok" : "failed"}`);
+  if(!ok) return { error: 'Login failed. Please try again' };
+  return { error: "info: LOGIN"};
+});
 fastify.post('/sources', (req, res) => res.send(sources));
 fastify.post('/log', async (req, res) => {
   if(req.body && req.body.parent && req.body.parent.name) {
@@ -81,6 +93,20 @@ function sourceInfo(sources) {
   return infos;
 }
 
+
+function login(cfg, user, pass) {
+  if(!cfg || !cfg.users || !user || !pass) return false;
+  user = user.trim();
+  pass = pass.trim();
+  const hash = createHash('md5');
+  hash.update(pass);
+  pass = hash.digest('hex');
+  for(let i = 0;i < cfg.users.length;i++) {
+    const u = cfg.users[i];
+    if(u.username === user && u.password === pass) return true;
+  }
+  return false;
+}
 
 
 /*    start up */
