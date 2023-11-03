@@ -145,4 +145,8 @@
     border: 1px solid #ccc;
     padding: 8px;
   }
+  .source-list {
+    height: calc(100vh - 120px);
+    overflow: scroll;
+  }
 </style>
