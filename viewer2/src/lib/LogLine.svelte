@@ -105,7 +105,9 @@
           <JSONTree defaultExpandedLevel=0 value={line.nfo.json} />
         </div>
       {/if}
+      {#if line.nfo.date}
       <span class="log-line-plain-dt">{line.nfo.date.toLocaleString(DateTime.DATETIME_FULL)}</span>
+      {/if}
       <span class="log-line-plain-src">{line.nfo.source}</span>
     </div>
   {/if}
