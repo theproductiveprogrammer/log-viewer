@@ -22,3 +22,5 @@ export function makeSearch() {
 
 export const open_sources = writable(false);
 export const top_line = writable(null);
+
+export const auth = writable(null);

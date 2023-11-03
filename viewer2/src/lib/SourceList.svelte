@@ -1,5 +1,5 @@
 <script>
-  import { current_log, log_fetching, log_fetching_error, open_sources } from '../stores.js';
+  import { auth, current_log, log_fetching, log_fetching_error, open_sources } from '../stores.js';
   import { getSources, getLog } from '../data.js';
   import LoadingMessages from './LoadingMessages.svelte';
   import { loadingSources } from '../messages.js';
@@ -8,7 +8,11 @@
 
   export let serverURL;
 
-  let sourcesP = getSources(serverURL);
+  let sourcesP;
+
+  auth.subscribe(token => {
+    sourcesP = getSources(serverURL, token);
+  });
 
   let fetching = {}
   async function loadCurrent(source, log) {

@@ -1,6 +1,9 @@
 <script>
+  import { auth } from './stores.js';
+
   import SourceList from './lib/SourceList.svelte';
   import LogsViewer from './lib/LogsViewer.svelte';
+  import Login from './lib/Login.svelte';
 
   import 'animate.css';
 
@@ -10,8 +13,13 @@
 <main>
   <h1>Log Viewer</h1>
 
+  {#key $auth}
+  {#if !$auth}
+    <Login />
+  {/if}
   <SourceList {serverURL} />
   <LogsViewer />
+  {/key}
 
 </main>
 
