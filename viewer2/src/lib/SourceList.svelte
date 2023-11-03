@@ -9,8 +9,10 @@
   export let serverURL;
 
   let sourcesP;
+  let token;
 
-  auth.subscribe(token => {
+  auth.subscribe(token_ => {
+    token = token_
     sourcesP = getSources(serverURL, token);
   });
 
@@ -23,7 +25,7 @@
     $log_fetching_error = null;
     open_sources.set(false);
     try {
-      $current_log = await getLog(serverURL, source.transformers, log);
+      $current_log = await getLog(serverURL, source.transformers, log, token);
       delete fetching[log.id];
       $log_fetching = false;
     } catch(e) {

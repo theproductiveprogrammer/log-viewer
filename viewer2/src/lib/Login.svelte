@@ -36,7 +36,10 @@
     try {
       const resp = await login(serverURL, name, pass);
       if(resp && resp.error) showError(resp.error);
-      else if(resp && resp.token) auth.set(resp.token);
+      else if(resp && resp.token) {
+        console.log({auth:resp.token})
+        auth.set(resp.token);
+      }
       else showError("Login failed");
     } catch(e) {
       showError(e);
@@ -55,9 +58,9 @@
       <div class="log-login-error" transition:slide>{error}</div>
     {/if}
     <label for="name">Username: </label>
-    <input bind:value={name} bind:this={nameE} autofocus {disabled} type="text">
-    <label for="name">Password: </label>
-    <input bind:value={pass} bind:this={passE} {disabled} type="password">
+    <input id="name" autocomplete="name" bind:value={name} bind:this={nameE} autofocus {disabled} type="text">
+    <label for="password">Password: </label>
+    <input id="password" bind:value={pass} bind:this={passE} {disabled} type="password">
     <button {disabled} on:click|preventDefault={onSubmit} on:keydown={enterH}>Submit</button>
   </div>
 </div>

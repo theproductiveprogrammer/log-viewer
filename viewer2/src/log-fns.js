@@ -40,9 +40,6 @@ export default async function makeLog(name, transformers, txt, log) {
     if(((i - (start_num - 1)) % 500) == 0) {
       await new Promise(res => setTimeout(() => res()));
     }
-    if(((i - (start_num - 1)) % 10000) == 0) {
-      console.log(`Parsing ${name}...   ${i}`);
-    }
     const l = lines[i];
     const nfo = parseLine(l);
     const prev = log.lines.length ? log.lines[log.lines.length - 1] : null;

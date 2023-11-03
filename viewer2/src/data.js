@@ -29,47 +29,48 @@ export async function getSources(serverURL, auth) {
   if(!auth) return;
   if(!cache.sources) {
     console.log('Fetching sources...');
-    const res = await fetch(`${serverURL}/sources`, { method: 'POST' });
-    if(res.ok) {
-      const sources = await res.json();
-      if(sources) {
-        sources.forEach(source => {
-          source.id = `${source.type}.${source.name}`;
-          if(source.transformers) {
-            source.transformers = rx_ify(source.transformers);
+    const res = await fetch(`${serverURL}/sources`, {
+      method: 'POST', body: JSON.stringify({auth}), headers: { 'Content-Type' : 'application/json' },
+    });
+    let sources;
+    try {
+      sources = await res.json();
+    } catch(e) { /* ignore */ }
+    if(!res || !res.ok || !sources) {
+      if(sources && sources.error) throw new Error(sources.error);
+      throw new Error("Failed getting sources");
+    }
+    sources.forEach(source => {
+      source.id = `${source.type}.${source.name}`;
+      if(source.transformers) {
+        source.transformers = rx_ify(source.transformers);
+      }
+      if(source.logs) {
+        source.logs = source.logs.map(log => {
+          if(typeof log === 'string') {
+            log = { name: log };
           }
-          if(source.logs) {
-            source.logs = source.logs.map(log => {
-              if(typeof log === 'string') {
-                log = { name: log };
-              }
-              return {
-                ...log,
-                id: `${source.id}|${log.name}`,
-                compact: source.compact,
-                transformers: source.transformers,
-                parent: {
-                  type: source.type,
-                  name: source.name,
-                },
-              }
-            });
+          return {
+            ...log,
+            id: `${source.id}|${log.name}`,
+            compact: source.compact,
+            transformers: source.transformers,
+            parent: {
+              type: source.type,
+              name: source.name,
+            },
           }
         });
-      } else {
-        throw new Error('Did not get existing sources');
       }
-      cache.sources = sources;
-    } else {
-      throw new Error('Failed getting existing sources');
-    }
+    });
+    cache.sources = sources;
   }
 
   console.log(cache.sources)
   return cache.sources;
 }
 
-export async function getLog(serverURL, transformers, forSource) {
+export async function getLog(serverURL, transformers, forSource, auth) {
   const now = Date.now();
   if(cache.logs[forSource.id] && (now - cache.logs[forSource.id].fetchedAt < 10000)) {
     console.log(`Resolving cached ${forSource.id}...`);
@@ -77,9 +78,9 @@ export async function getLog(serverURL, transformers, forSource) {
     return cache.logs[forSource.id];
   }
 
-  console.log(`Fetching ${forSource.id}...`);
+  console.log(`Fetching ${forSource.id}...`, auth);
   const res = await fetch(`${serverURL}/log`, {
-    method: 'POST', body: JSON.stringify(forSource), headers: { 'Content-Type' : 'application/json' },
+    method: 'POST', body: JSON.stringify({ forSource, auth }), headers: { 'Content-Type' : 'application/json' },
   });
   if(!res.ok) {
     throw new Error(`Failed getting log: ${forSource.id}`);
