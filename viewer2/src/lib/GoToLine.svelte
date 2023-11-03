@@ -7,10 +7,13 @@
 
   $: disabled = !log;
 
+  let top_line_release = top_line.subscribe(line_num => {
+    num = line_num;
+  });
+
   function gotoLine() {
     if(disabled) return;
     if(num) adjustNumlinesTill(num, log);
-    num = "";
   }
 
   function enterH(e) {
@@ -20,7 +23,7 @@
 
 <div class="log-line-goto-cont" class:disabled>
   <div class="log-line-goto-label">
-    Goto line: <input placeholder={$top_line} type="number" {disabled} bind:value={num} on:keydown={enterH}/>
+    Goto line: <input type="number" {disabled} bind:value={num} on:change={gotoLine} on:keydown={enterH}/>
   </div>
   <button {disabled} on:click={gotoLine}>Go</button>
 </div>
