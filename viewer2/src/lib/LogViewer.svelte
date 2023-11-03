@@ -22,6 +22,13 @@
     log = v1;
     if(numlines_release) numlines_release();
     if(filters_release) filters_release();
+    if(search_release) search_release();
+    if(!log) {
+      numlines_release = null;
+      filters_release = null;
+      search_release = null;
+      return;
+    }
     numlines_release = log.view.numlines.subscribe(v2 => {
       numlines = v2;
       setLines();
