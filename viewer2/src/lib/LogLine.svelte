@@ -92,13 +92,27 @@
     </div>
 
   {:else}
-    <div class="log-line-txt" on:dblclick|preventDefault={toggleRaw}>{line.txt}</div>
+    <div class="log-line-txt" on:dblclick|preventDefault={toggleRaw}>
+      <span class="log-line-plain-msg">{line.nfo.msg}</span>
+      {#if line.nfo.json}
+        <div class="log-json-tree">
+          <JSONTree defaultExpandedLevel=0 value={line.nfo.json} />
+        </div>
+      {/if}
+      <span class="log-line-plain-dt">{line.nfo.date.toLocaleString(DateTime.DATETIME_FULL)}</span>
+      <span class="log-line-plain-src">{line.nfo.source}</span>
+    </div>
   {/if}
   {/if}
 
 </div>
 
 <style>
+  .log-line-plain-dt,
+  .log-line-plain-src {
+    font-size: 0.8em;
+    color: #999;
+  }
   .log-json-tree {
     --json-tree-font-size: 13px;
     --json-tree-font-family: Inter, system-ui, Avenir, Helvetica, Arial, 'Courier New', Courier, monospace;
