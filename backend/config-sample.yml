@@ -1,6 +1,27 @@
 log-viewer:
   port: 8887
+  auth:
+    key: <<set a secret key here>>
+  users:
+    - username: charles
+      password: 1ebc88f7f9e2f673bd331773af5d1df2
+    - username: another-fellow
+      password: cc03e747a6afbbcbf8be7668acfebee5
+    - username: ...
+      password: <<md5 of user+password>>
   sources:
+    file:
+      downloads:
+        transformers:
+          - match: com.giving.logs.to.flip.MyClass
+            find: /(Payload:.*), (messageId:.*)/
+            replace: $2,$1
+          - find: /at (com\.jashmore\..*\n|java\..*\n|com\.mashape\..*\n|org\.json\..*\n|org\.jasypt\..*\n)/g
+            replace: "..."
+        folder: /Users/charleslobo/Downloads
+        logs:
+          - mylog1.log
+          - yourlog2.log
     ftp:
       ftpserver1:
         host: 152.151.150.100
@@ -8,6 +29,12 @@ log-viewer:
         user: ftpuser
         password: IlOveSeCreTs
         secure: true
+        transformers:
+          - match: /containing regexp/
+          - find: /\u001b\[[^m]*m/g
+            replace: ""
+          - find: /at (io\.micronaut\..*\n|reactor\.core\..*\n|io\.netty\..*\n)/g
+            replace: "..."
         logs:
           - aninteresting.log
           - another.log
