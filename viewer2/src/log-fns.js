@@ -191,7 +191,6 @@ function parseLine(line) {
         s = l.line_left.indexOf(c, s+1);
         if(s == -1) return;
         try {
-          console.log('parsing', l.line_left.substring(s));
           curr.json = JSON.parse(l.line_left.substring(s));
           if(curr.json) {
             l.line_left = l.line_left.substring(0, s);
