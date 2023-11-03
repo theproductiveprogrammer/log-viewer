@@ -37,6 +37,7 @@
   {#if $open_sources}
     <div class="source-list" transition:slide={{axis:'x'}} >
       <div class="close" on:click={e => $open_sources = false}>x</div>
+      {#if sources}
       {#each sources as source (source.id)}
         <div class="source-name">{cap(source.name)}</div>
         <ul>
@@ -53,6 +54,7 @@
         {/each}
         </ul>
       {/each}
+      {/if}
     </div>
   {/if}
 {:catch error}

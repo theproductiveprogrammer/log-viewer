@@ -8,9 +8,10 @@ const cache = {
 
 const inFlight = {}
 
-export async function getSources(serverURL) {
+export async function getSources(serverURL, auth) {
+  if(!auth) return;
   if(!cache.sources) {
-    console.log('Fetching sources from server...');
+    console.log('Fetching sources...');
     const res = await fetch(`${serverURL}/sources`, { method: 'POST' });
     if(res.ok) {
       const sources = await res.json();
