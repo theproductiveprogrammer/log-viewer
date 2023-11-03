@@ -1,6 +1,7 @@
 import path from 'path';
 import { mkdir, readFile } from 'node:fs/promises';
 const { createHash, } = await import('node:crypto');
+import { default as jt } from '@tpp/jt';
 
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
@@ -30,26 +31,39 @@ fastify.post('/login', async (req, res) => {
   const ok = login(cfg, username, req.body.password);
   req.log.info(`Login attempt for: ${username} ${ok ? "ok" : "failed"}`);
   if(!ok) return { error: 'Login failed. Please try again' };
-  return { error: "info: LOGIN"};
+  token(cfg, username, (error,token) => res.send({error,token}));
+  return res;
 });
-fastify.post('/sources', (req, res) => res.send(sources));
+fastify.post('/sources', async (req, res) => {
+  const err_auth = await authErr(req);
+  if(err_auth) res.status(403).send({ error: err_auth });
+  else res.send(sources);
+});
 fastify.post('/log', async (req, res) => {
-  if(req.body && req.body.parent && req.body.parent.name) {
-    if(req.body.parent.type == 'file') {
-      const data = await fetchFile(cfg.sources.file[req.body.parent.name], req.body.name);
+  const err_auth = await authErr(req);
+  if(err_auth) {
+    res.status(403).send({ error: err_auth });
+    return res;
+  }
+  const forSource = req.body.forSource;
+  if(forSource && forSource.parent && forSource.parent.name) {
+    if(forSource.parent.type == 'file') {
+      const data = await fetchFile(cfg.sources.file[forSource.parent.name], forSource.name);
       res.header('Content-Type', 'application/octect-stream');
       res.send(data);
       return res;
-    } else if(req.body.parent.type == 'ftp') {
-      const dst = path.join(cfg.download.folder, req.body.parent.name);
+    } else if(forSource.parent.type == 'ftp') {
+      console.log(2, cfg.sources.file[forSource.parent.name], forSource.name);
+      const dst = path.join(cfg.download.folder, forSource.parent.name);
       await mkdir(dst, { recursive: true });
-      const data = await fetchFTP(dst, cfg.sources.ftp[req.body.parent.name], req.body.name);
+      console.log(8, cfg.sources.file[forSource.parent.name], forSource.name);
+      const data = await fetchFTP(dst, cfg.sources.ftp[forSource.parent.name], forSource.name);
       res.header('Content-Type', 'application/octect-stream');
       res.send(data);
       return res;
     }
   }
-  res.status(400).send(`Did not understand source: ${JSON.stringify(req.body)}`);
+  res.status(400).send(`Did not understand source: ${JSON.stringify(forSource)}`);
 });
 
 
@@ -106,6 +120,26 @@ function login(cfg, user, pass) {
     if(u.username === user && u.password === pass) return true;
   }
   return false;
+}
+
+function token(cfg, name, cb) {
+  jt.token({
+    iss: "log-viewer",
+    sub: "log-analysis",
+    exp: jt.exp.days(2),
+  }, {
+    name,
+  }, cfg.auth.key, cb);
+}
+
+async function authErr(req) {
+  if(!req || !req.body || !req.body.auth) return "Not authenticated: 1211";
+  return new Promise(res => {
+    jt.check(req.body.auth, cfg.auth.key, "log-viewer", "log-analysis", (error, payload, header) => {
+      if(error) res(`Authentication failed: ${error}`);
+      else res();
+    });
+  });
 }
 
 
