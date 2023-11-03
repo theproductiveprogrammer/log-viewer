@@ -10,9 +10,6 @@ import YAML from 'yaml';
 import { fetch as fetchFTP } from './ftplogs.js';
 import { fetch as fetchFile } from './filelogs.js';
 
-const fastify = Fastify({ logger: true });
-fastify.register(cors);
-
 /*    config */
 const cfgPath = new URL('./config.yml', import.meta.url);
 const cfg = YAML.parse(await readFile(cfgPath, {encoding: 'utf8'}))['log-viewer'];
@@ -21,6 +18,11 @@ if(!cfg.download || !cfg.download.folder) throw new Error("log-viewer.download.f
 if(!cfg.port) throw new Error("log-viewer.port config parameter missing");
 transformerify(cfg)
 await mkdir(cfg.download.folder, { recursive: true });
+
+const fastify = Fastify({ logger: {
+  file: cfg.log.file,
+}});
+fastify.register(cors);
 
 /*    routing */
 fastify.post('/login', async (req, res) => {

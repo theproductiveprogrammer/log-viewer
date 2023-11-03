@@ -2,6 +2,8 @@ log-viewer:
   port: 8887
   auth:
     key: <<set a secret key here>>
+  log:
+    file: /tmp/log-viewer.log
   users:
     - username: charles
       password: 1ebc88f7f9e2f673bd331773af5d1df2
