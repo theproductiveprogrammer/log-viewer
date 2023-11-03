@@ -99,7 +99,7 @@ function login(cfg, user, pass) {
   user = user.trim();
   pass = pass.trim();
   const hash = createHash('md5');
-  hash.update(pass);
+  hash.update(`${user}+${pass}`);
   pass = hash.digest('hex');
   for(let i = 0;i < cfg.users.length;i++) {
     const u = cfg.users[i];
