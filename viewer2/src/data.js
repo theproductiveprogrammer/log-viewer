@@ -78,7 +78,7 @@ export async function getLog(serverURL, transformers, forSource, auth) {
     return cache.logs[forSource.id];
   }
 
-  console.log(`Fetching ${forSource.id}...`, auth);
+  console.log(`Fetching ${forSource.id}...`);
   const res = await fetch(`${serverURL}/log`, {
     method: 'POST', body: JSON.stringify({ forSource, auth }), headers: { 'Content-Type' : 'application/json' },
   });

@@ -32,6 +32,14 @@
   }
 
   async function onSubmit() {
+    if(!name) {
+      nameE.focus();
+      return;
+    }
+    if(!pass) {
+      passE.focus();
+      return;
+    }
     disabled = true;
     try {
       const resp = await login(serverURL, name, pass);
@@ -58,9 +66,9 @@
       <div class="log-login-error" transition:slide>{error}</div>
     {/if}
     <label for="name">Username: </label>
-    <input id="name" autocomplete="name" bind:value={name} bind:this={nameE} autofocus {disabled} type="text">
+    <input id="name" on:keydown={enterH} autocomplete="name" bind:value={name} bind:this={nameE} autofocus {disabled} type="text">
     <label for="password">Password: </label>
-    <input id="password" bind:value={pass} bind:this={passE} {disabled} type="password">
+    <input id="password" on:keydown={enterH} bind:value={pass} bind:this={passE} {disabled} type="password">
     <button {disabled} on:click|preventDefault={onSubmit} on:keydown={enterH}>Submit</button>
   </div>
 </div>
