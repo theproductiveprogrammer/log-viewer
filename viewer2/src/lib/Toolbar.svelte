@@ -2,7 +2,7 @@
   import { readable } from 'svelte/store';
   let dummy = readable();
 
-  import { current_log as log } from '../state.js';
+  import { current_log as log } from '../stores.js';
 
   import Switch from './Switch.svelte';
   import NumLines from './NumLines.svelte';

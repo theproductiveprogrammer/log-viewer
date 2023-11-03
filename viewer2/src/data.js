@@ -1,5 +1,5 @@
 import makeLog, { rx_ify} from './log-fns.js';
-import { makeCompact, makeNumlines, makeFilters, makeSearch } from './state.js';
+import { makeCompact, makeNumlines, makeFilters, makeSearch } from './stores.js';
 
 const cache = {
   sources: null,

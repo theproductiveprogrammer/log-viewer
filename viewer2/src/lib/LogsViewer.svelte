@@ -1,7 +1,7 @@
 <script>
   import { slide } from 'svelte/transition';
 
-  import { current_log,log_fetching, log_fetching_error } from '../state.js';
+  import { current_log,log_fetching, log_fetching_error } from '../stores.js';
   import LoadingMessages from './LoadingMessages.svelte';
   import { loadingLogs } from '../messages.js';
   import LogViewer from './LogViewer.svelte';

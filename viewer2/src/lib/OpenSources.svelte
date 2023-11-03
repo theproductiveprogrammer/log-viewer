@@ -2,7 +2,7 @@
   import { onDestroy } from 'svelte';
   import OpenIcon from '../assets/open.svelte';
 
-  import { open_sources } from '../state.js';
+  import { open_sources } from '../stores.js';
 
   export let log;
 

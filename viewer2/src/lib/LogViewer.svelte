@@ -3,7 +3,7 @@
   import LogLine from './LogLine.svelte';
   import FilterList from './FilterList.svelte';
 
-  import { current_log, top_line } from '../state.js';
+  import { current_log, top_line } from '../stores.js';
 
   import { applyNumlines, applyFilters, applySearch } from '../log-fns.js';
   import { scrollToTop } from '../util.js';

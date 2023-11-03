@@ -1,5 +1,5 @@
 <script>
-  import { top_line } from '../state.js';
+  import { top_line } from '../stores.js';
   import { adjustNumlinesTill } from '../log-fns.js';
 
   export let log;

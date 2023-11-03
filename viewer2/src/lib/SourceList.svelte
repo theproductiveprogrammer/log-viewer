@@ -1,5 +1,5 @@
 <script>
-  import { current_log, log_fetching, log_fetching_error, open_sources } from '../state.js';
+  import { current_log, log_fetching, log_fetching_error, open_sources } from '../stores.js';
   import { getSources, getLog } from '../data.js';
   import LoadingMessages from './LoadingMessages.svelte';
   import { loadingSources } from '../messages.js';
