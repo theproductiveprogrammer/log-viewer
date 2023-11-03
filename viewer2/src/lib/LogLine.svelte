@@ -26,7 +26,7 @@
 
   function toggleRaw() {
     raw = !raw;
-    copyToClipboard(line.txt);
+    copyToClipboard(line.orig?line.orig:line.txt);
   }
 
 </script>
@@ -38,7 +38,7 @@
   {#if raw}
     <div class="log-line-txt-cont"
          on:dblclick|preventDefault={toggleRaw}>
-    <div class="log-line-txt">{line.txt}</div>
+    <div class="log-line-txt">{line.orig?line.orig:line.txt}</div>
     </div>
   {:else}
   {#if full && hasNfo(line.nfo)}
@@ -93,7 +93,13 @@
 
   {:else}
     <div class="log-line-txt" on:dblclick|preventDefault={toggleRaw}>
-      <span class="log-line-plain-msg">{line.nfo.msg}</span>
+      <span class="log-line-plain-msg">
+        {#if line.nfo.exception }
+          <ShowException msg={line.nfo.msg} exception={line.nfo.exception} />
+        {:else}
+          {line.nfo.msg}
+        {/if}
+      </span>
       {#if line.nfo.json}
         <div class="log-json-tree">
           <JSONTree defaultExpandedLevel=0 value={line.nfo.json} />

@@ -41,7 +41,7 @@ export default async function makeLog(name, transformers, txt, log) {
       await new Promise(res => setTimeout(() => res()));
     }
     const l = lines[i];
-    const nfo = parseLine(l);
+    const nfo = parseLine(l.txt);
     const prev = log.lines.length ? log.lines[log.lines.length - 1] : null;
     if(!i || hasNfo(nfo)) {
       if(prev && prev.nfo.date && nfo.date) {
@@ -49,6 +49,7 @@ export default async function makeLog(name, transformers, txt, log) {
       }
       log.lines.push({
         num: l.num,
+        orig: l.orig,
         txt: l.txt,
         nfo,
       });
@@ -56,6 +57,7 @@ export default async function makeLog(name, transformers, txt, log) {
     } else if(nfo.msg) {
       prev.nfo.msg += '\n' + nfo.msg;
       prev.txt += '\n' + l.txt;
+      prev.orig += '\n' + l.orig;
     }
   }
 
@@ -63,6 +65,16 @@ export default async function makeLog(name, transformers, txt, log) {
 
   log._optim = optim;
   return log;
+}
+
+/*    way/
+ * delete orig-inal if it's the same as txt
+ */
+function optimOrig(log) {
+  if(!log || !log.lines) return;
+  log.lines.forEach(l => {
+    if(l.txt === l.orig) delete l.orig;
+  });
 }
 
 /*    way/
@@ -130,7 +142,7 @@ function parseLine(line) {
   };
 
   const l = {
-    line_left: line.txt,
+    line_left: line,
     curr_chunk: null,
   };
   load_json(l);
@@ -295,6 +307,7 @@ export function transform(transformers, lines) {
   let i = 0;
   return lines.map(l => {
     let txt = l.txt;
+    l.orig = l.txt;
     if(txt) {
       transformers.forEach(t => {
         if(!t.match || txt.match(t.match)) {
