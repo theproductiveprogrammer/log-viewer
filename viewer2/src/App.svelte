@@ -15,7 +15,7 @@
 
   {#key $auth}
   {#if !$auth}
-    <Login />
+    <Login {serverURL} />
   {/if}
   <SourceList {serverURL} />
   <LogsViewer />

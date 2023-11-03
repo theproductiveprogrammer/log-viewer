@@ -6,7 +6,24 @@ const cache = {
   logs: {},
 }
 
-const inFlight = {}
+export async function login(serverURL, username, password) {
+  if(!username) return { error: "Missing username" };
+  if(!password) return { error: "Missing password" };
+  const res = await fetch(`${serverURL}/login`, {
+    method: 'POST', body: JSON.stringify({username,password}), headers: { 'Content-Type' : 'application/json' },
+  });
+
+  let info;
+  try {
+     info = await res.json();
+  } catch(e) { /* ignore */ }
+
+  if(!res.ok) {
+    const msg = info && info.msg || `Error: ${res.statusText}`;
+    throw new Error(msg)
+  }
+  return info;
+}
 
 export async function getSources(serverURL, auth) {
   if(!auth) return;

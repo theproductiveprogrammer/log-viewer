@@ -1,8 +1,51 @@
 <script>
   import { slide } from 'svelte/transition';
-  let error;
+  import { login } from '../data.js';
+  import { auth } from '../stores.js';
 
-  let disabled = true;
+  export let serverURL;
+
+  let error;
+  let disabled;
+
+  let name;
+  let nameE;
+  let pass;
+  let passE;
+  let timer;
+
+  function showError(err) {
+    if(err.message) error = err.message
+    else error = err;
+    disabled = true;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      disabled = false;
+      timer = null;
+      setTimeout(() => {
+        if(pass) nameE.focus();
+        else if(name) passE.focus();
+        else nameE.focus()
+      });
+    }, 2000);
+    setTimeout(() => error = "", 10000);
+  }
+
+  async function onSubmit() {
+    disabled = true;
+    try {
+      const resp = await login(serverURL, name, pass);
+      if(resp && resp.error) showError(resp.error);
+      else if(resp && resp.token) auth.set(resp.token);
+      else showError("Login failed");
+    } catch(e) {
+      showError(e);
+    }
+  }
+
+  function enterH(e) {
+    if(e.key === 'Enter') onSubmit();
+  }
 </script>
 
 <div class="logs-login-overlay">
@@ -12,10 +55,10 @@
       <div class="log-login-error" transition:slide>{error}</div>
     {/if}
     <label for="name">Username: </label>
-    <input autofocus {disabled} type="text">
+    <input bind:value={name} bind:this={nameE} autofocus {disabled} type="text">
     <label for="name">Password: </label>
-    <input {disabled} type="password">
-    <button {disabled}>Submit</button>
+    <input bind:value={pass} bind:this={passE} {disabled} type="password">
+    <button {disabled} on:click|preventDefault={onSubmit} on:keydown={enterH}>Submit</button>
   </div>
 </div>
 
