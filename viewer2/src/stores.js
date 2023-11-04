@@ -22,3 +22,27 @@ export const top_line = writable(null);
 
 export const auth = storable('auth', null);
 export const compact = storable('compact', false);
+
+export function makeSelections() {
+  let selections = [];
+  const { subscribe, set, update } = writable(selections);
+
+  const add = v => {
+    selections = [...selections, v];
+    update(s => selections);
+  };
+  const rm = v => {
+    selections = selections.filter(v_ => v_ != v);
+    update(s => selections);
+  };
+  const contains = v => {
+    return selections.indexOf(v) != -1;
+  };
+
+  return {
+    subscribe,
+    add,
+    rm,
+    contains,
+  };
+}

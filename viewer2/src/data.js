@@ -1,5 +1,5 @@
 import makeLog, { rx_ify} from './log-fns.js';
-import { compact, makeNumlines, makeFilters, makeSearch } from './stores.js';
+import { compact, makeNumlines, makeFilters, makeSearch, makeSelections } from './stores.js';
 
 const cache = {
   sources: null,
@@ -96,6 +96,7 @@ export async function getLog(serverURL, transformers, forSource, auth) {
         numlines: makeNumlines(),
         filters: makeFilters(),
         search: makeSearch(),
+        selections: makeSelections(),
       },
       fetchedAt: now,
     };

@@ -29,10 +29,21 @@
     copyToClipboard(line.orig?line.orig:line.txt);
   }
 
+  function handleSel(e) {
+    const checkbox = e.target;
+    if(checkbox.checked) view.selections.add(line.num);
+    else view.selections.rm(line.num);
+  }
+
+  let selected = false;
+  view.selections.subscribe(v => {
+    selected = v.indexOf(line.num) != -1;
+  });
+
 </script>
 
 <div class="log-line" 
-     class:full class:found class:notfound class:plain={raw || !hasNfo(line.nfo)}
+     class:full class:found class:notfound class:plain={raw || !hasNfo(line.nfo)} class:selected
      out:slide
      role="none">
   {#if raw}
@@ -54,7 +65,7 @@
   <div class="log-mark-cont">
     <div class="log-mark">
       <div class="log-line-num">{line.num}</div>
-      <input type="checkbox">
+      <input type="checkbox" on:change={handleSel}>
       <AfterInfo info={line.nfo && line.nfo.after} />
     </div>
   </div>
@@ -116,6 +127,9 @@
 </div>
 
 <style>
+  .selected {
+    background: #ccc;
+  }
   .log-line-plain-dt,
   .log-line-plain-src {
     font-size: 0.8em;
