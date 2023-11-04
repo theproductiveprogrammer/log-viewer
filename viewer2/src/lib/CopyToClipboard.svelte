@@ -37,10 +37,9 @@
     if(e.key === 'Enter') copyAction();
   }
 
-  function test() {
-    console.log('tes', arguments);
-  }
-  onDestroy(test);
+  onDestroy(() => {
+    if(sel_release) sel_release();
+  });
 
 </script>
 
