@@ -1,5 +1,5 @@
 <script>
-  import { tick } from 'svelte';
+  import { tick, onDestroy } from 'svelte';
   import { scale } from 'svelte/transition';
 
   import CopyIcon from '../assets/copy.svelte';
@@ -12,9 +12,22 @@
 
   let ping;
 
+  let selections;
+  let sel_release;
+  if(log) {
+    sel_release = log.view.selections.subscribe(v => selections = v);
+  }
+
   async function copyAction() {
     if(disabled) return;
-    copyToClipboard(log.txt);
+    let txt = log.txt;
+    if(selections && selections.length) {
+      txt = log.lines
+        .filter(l => log.view.selections.contains(l.num))
+        .map(l => l.orig?l.orig:l.txt)
+        .join("\n");
+    }
+    copyToClipboard(txt);
     ping = true;
     setTimeout(() => ping = false, 1000);
     await tick;
@@ -23,6 +36,11 @@
   function enterH(e) {
     if(e.key === 'Enter') copyAction();
   }
+
+  function test() {
+    console.log('tes', arguments);
+  }
+  onDestroy(test);
 
 </script>
 
@@ -44,7 +62,7 @@
   .log-toolbar-copy-msg {
     font-size: 0.7em;
     position: absolute;
-    left: 0;
+    left: 32px;
     top: 0;
   }
   .log-toolbar-copy {

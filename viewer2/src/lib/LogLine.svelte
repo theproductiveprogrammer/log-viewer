@@ -1,4 +1,5 @@
 <script>
+  import { onDestroy } from 'svelte';
   import { fade,slide } from 'svelte/transition';
 
   import { compact } from '../stores.js';
@@ -19,7 +20,7 @@
 
   let found;
   let notfound;
-  view.search.subscribe(s => {
+  const search_rel = view.search.subscribe(s => {
     found = line.found === true;
     notfound = line.found === false;
   });
@@ -36,8 +37,13 @@
   }
 
   let selected = false;
-  view.selections.subscribe(v => {
+  const sel_rel = view.selections.subscribe(v => {
     selected = view.selections.contains(line.num);
+  });
+
+  onDestroy(() => {
+    if(search_rel) search_rel();
+    if(sel_rel) sel_rel();
   });
 
 </script>
