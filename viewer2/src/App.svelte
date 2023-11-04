@@ -1,4 +1,6 @@
 <script>
+  import {version} from '../package.json';
+
   import { auth } from './stores.js';
 
   import SourceList from './lib/SourceList.svelte';
@@ -21,6 +23,8 @@
   <LogsViewer />
   {/key}
 
+  <div class="version">{version}</div>
+
 </main>
 
 <style>
@@ -30,6 +34,14 @@
     text-align: center;
     padding: 0px;
     background: #efefff;
+  }
+  .version {
+    font-size: 0.7em;
+    position: absolute;
+    top: 12px;
+    right: 4px;
+    color: white;
+    opacity: 0.4;
   }
 @media (prefers-color-scheme: light) {
   h1 {
