@@ -37,7 +37,7 @@
 
   let selected = false;
   view.selections.subscribe(v => {
-    selected = v.indexOf(line.num) != -1;
+    selected = view.selections.contains(line.num);
   });
 
 </script>
@@ -65,7 +65,7 @@
   <div class="log-mark-cont">
     <div class="log-mark">
       <div class="log-line-num">{line.num}</div>
-      <input type="checkbox" on:change={handleSel}>
+      <input type="checkbox" bind:checked={selected} on:change={handleSel}>
       <AfterInfo info={line.nfo && line.nfo.after} />
     </div>
   </div>
