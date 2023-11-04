@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import { cleanHtml, rx_ify_or_str } from './util.js';
+import { compact, makeNumlines, makeFilters, makeSearch, makeSelections } from './stores.js';
 
 /*    problem/
  * we are given a large log text that we need to
@@ -479,3 +480,15 @@ export function applySearch(log, search) {
   });
 }
 
+export function newLog(forSource) {
+  return {
+    src: forSource,
+    lines: [],
+    view: {
+      numlines: makeNumlines(),
+      filters: makeFilters(),
+      search: makeSearch(),
+      selections: makeSelections(),
+    },
+  }
+}
