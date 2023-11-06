@@ -36,6 +36,11 @@ export async function getSources(serverURL, auth) {
       sources = await res.json();
     } catch(e) { /* ignore */ }
     if(!res || !res.ok || !sources) {
+      if(res.status == 403) {
+        const err = new Error(sources.error);
+        err.authError = true;
+        throw err;
+      }
       if(sources && sources.error) throw new Error(sources.error);
       throw new Error("Failed getting sources");
     }
