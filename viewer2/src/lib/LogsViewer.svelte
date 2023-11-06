@@ -44,7 +44,7 @@
 {#if $log_fetching_error}
   <div class="log-error" in:slide>Error: {$log_fetching_error.message}</div>
 {/if}
-<Dropzone on:drop={handleFilesSelect} accept=".log,.txt">
+<Dropzone disableDefaultStyles={true} on:drop={handleFilesSelect} accept=".log,.txt">
 {#if $current_log}
   <LogViewer />
 {:else}
