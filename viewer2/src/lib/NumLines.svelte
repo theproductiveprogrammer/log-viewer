@@ -29,6 +29,8 @@
     }
   }
 
+  $: log && log.view.numlines.set(numlines);
+
   function enterH(e) {
     if(e.key === 'Enter') addPage();
   }

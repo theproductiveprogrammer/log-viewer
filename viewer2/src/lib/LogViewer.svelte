@@ -109,7 +109,6 @@
   .log-viewer-lines {
     overflow: scroll;
     height: 100vh;
-    padding-bottom: 10em;
   }
   .log-name {
     background: #efefff;
