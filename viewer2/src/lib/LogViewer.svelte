@@ -63,6 +63,9 @@
   function load_more(e) {
     if(log) log.view.numlines.set(numlines + 1);
   }
+  function enterH(e) {
+    if(e.key === 'Enter') load_more(e);
+  }
 
   onDestroy((v) => {
     if(search_release) search_release();
@@ -77,7 +80,9 @@
   <div class="log-name">{log.src.name}</div>
   <FilterList log={log} />
   <div class="log-viewer-lines" bind:this={cont}>
-    {#if has_more}<div class="fetch-more" on:click={load_more}>LOAD MORE (+1)...</div>{/if}
+    {#if has_more}
+      <div class="fetch-more" on:click={load_more} on:keydown={enterH} role="none">LOAD MORE (+1)...</div>
+    {/if}
     {#each lines as line (log.src.id + line.num)}
       <LogLine {line} view={log.view} />
     {/each}
