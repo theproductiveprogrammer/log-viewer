@@ -10,12 +10,14 @@
   import CopyToClipboard from './CopyToClipboard.svelte';
   import GoToLine from './GoToLine.svelte';
   import OpenSources from './OpenSources.svelte';
+  import RefreshBtn from './RefreshBtn.svelte';
 
 </script>
 
 <div class="log-viewer-toolbar">
   <div class="log-toolbar-leftpane">
     <OpenSources log={$log} />
+    <RefreshBtn log={$log} />
     <CopyToClipboard log={$log} />
     <GoToLine log={$log} />
     <NumLines log={$log} />

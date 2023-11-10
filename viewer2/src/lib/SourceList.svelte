@@ -1,5 +1,5 @@
 <script>
-  import { auth, current_log, log_fetching, log_fetching_error, open_sources } from '../stores.js';
+  import { auth, current_log, log_fetching, log_fetching_error, open_sources, refresh } from '../stores.js';
   import { getSources, getLog } from '../data.js';
   import LoadingMessages from './LoadingMessages.svelte';
   import { loadingSources } from '../messages.js';
@@ -62,11 +62,13 @@
     fetching[log.id] = true;
     $log_fetching = true;
     $log_fetching_error = null;
+    $refresh = null;
     open_sources.set(false);
     try {
       $current_log = await getLog(serverURL, source.transformers, log, token);
       delete fetching[log.id];
       $log_fetching = false;
+      $refresh = () => loadCurrent(source, log);
     } catch(e) {
       delete fetching[log.id];
       $current_log = null;

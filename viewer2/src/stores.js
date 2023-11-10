@@ -4,6 +4,7 @@ import { storable } from './storable.js';
 export const current_log = writable(null);
 export const log_fetching = writable(false);
 export const log_fetching_error = writable(null);
+export const refresh = writable(null);
 
 export function makeNumlines() {
   return new writable(24);
