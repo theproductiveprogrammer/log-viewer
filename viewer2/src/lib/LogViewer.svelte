@@ -108,7 +108,7 @@
   }
   .log-viewer-lines {
     overflow: scroll;
-    height: 100vh;
+    height: calc(100vh - 150px);
   }
   .log-name {
     background: #efefff;
