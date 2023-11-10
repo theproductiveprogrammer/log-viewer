@@ -7,7 +7,7 @@ export const log_fetching_error = writable(null);
 export const refresh = writable(null);
 
 export function makeNumlines() {
-  return new writable(24);
+  return new writable(128);
 }
 
 export function makeFilters() {
