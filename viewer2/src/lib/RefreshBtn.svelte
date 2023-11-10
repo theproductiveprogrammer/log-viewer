@@ -29,11 +29,12 @@
     cursor: pointer;
     margin-right: 1em;
     transition: transform 500ms ease-in-out;
+    transform-origin: 12px 12px;
   }
   .log-toolbar-refresh:hover {
     opacity: 0.6;
     fill: #339;
-    transform: scale(1.1);
+    transform: scale(1.1) rotate(90deg);
   }
   .log-toolbar-refresh.disabled:hover,
   .log-toolbar-refresh.disabled {
