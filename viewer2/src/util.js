@@ -66,3 +66,8 @@ export function scrollToTop(e) {
   if(!e) return;
   e.scroll({ top: 0, behavior: "smooth" });
 }
+
+export function scrollToBottom(e) {
+  if(!e) return;
+  e.scroll({ top: e.scrollHeight, behavior: "smooth" });
+}
