@@ -70,7 +70,7 @@ export async function getSources(serverURL, auth) {
     cache.sources = sources;
   }
 
-  console.log(cache.sources)
+  console.log({source:cache.sources})
   return cache.sources;
 }
 
