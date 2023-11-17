@@ -410,10 +410,13 @@ export function applyNumlines(log, numlines) {
   let i = log.lines.length-1;
   let sz = 0;
   for(;i >= 0;i--) {
-    const line = log.lines[i];
     if(!log.lines[i].x) sz++;
-    if(sz == display) break;
+    if(sz == display) {
+      i--;
+      break;
+    }
   }
+  i++;
   return log.lines.slice(i).filter(l => !l.x);
 }
 
