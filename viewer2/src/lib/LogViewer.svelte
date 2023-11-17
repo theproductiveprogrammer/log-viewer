@@ -57,6 +57,9 @@
       top_line.set(lines[0].num);
       let totlines = log.lines.filter(l => !l.x).length;
       has_more = numlines < totlines;
+      if(lines.length > 500) {
+        lines = lines.slice(0, 500);
+      }
     }
   }
 

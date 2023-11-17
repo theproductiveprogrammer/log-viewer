@@ -405,16 +405,16 @@ export function applyNumlines(log, numlines) {
   let display = numlines;
   if(display < 1) display = 1;
 
-  const ret = [];
-  if(log.lines) {
-    for(let i = log.lines.length-1;i >= 0;i--) {
-      const line = log.lines[i];
-      if(line.x) continue;
-      ret.unshift(line);
-      if(ret.length == display) break;
-    }
+  if(!log.lines) return [];
+
+  let i = log.lines.length-1;
+  let sz = 0;
+  for(;i >= 0;i--) {
+    const line = log.lines[i];
+    if(!log.lines[i].x) sz++;
+    if(sz == display) break;
   }
-  return ret;
+  return log.lines.slice(i).filter(l => !l.x);
 }
 
 /*    way/
