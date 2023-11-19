@@ -2,6 +2,8 @@
   import { fade } from 'svelte/transition';
   import { removeFilter } from '../log-fns.js';
 
+  import CloseIcon from '../assets/close2.svelte';
+
   export let log;
   let filters = log.view.filters;
 
@@ -28,14 +30,22 @@
       out:fade
       role="none"
       >
+      <span class="log-filter-close-icon"><CloseIcon/></span>
       <span class="log-filter-type">{msg(filter)}</span>
       <span class="log-filter-val">"{filter.val}"</span>
+      <span class="log-filter-close-icon"><CloseIcon/></span>
     </div>
   {/each}
 </div>
 </div>
 
 <style>
+  .log-filter-close-icon {
+    position: relative;
+    top: 3px;
+    margin: 8px;
+    opacity: 0.8;
+  }
   .log-filter-list {
     text-align: center;
     font-size: 0.8em;
