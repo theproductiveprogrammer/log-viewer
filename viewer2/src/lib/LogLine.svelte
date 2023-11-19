@@ -12,6 +12,8 @@
 
   import JSONTree from 'svelte-json-tree';
 
+  import ToggleRawIcon from '../assets/toggle-raw.svelte';
+
   export let line;
   export let view;
 
@@ -53,8 +55,7 @@
      out:slide
      role="none">
   {#if raw}
-    <div class="log-line-txt-cont"
-         on:dblclick|preventDefault={toggleRaw} role="none">
+    <div class="log-line-txt-cont">
     <div class="log-line-txt">{line.orig?line.orig:line.txt}</div>
     </div>
   {:else}
@@ -78,8 +79,7 @@
 
   {#if full && hasNfo(line.nfo)}
 
-    <div class="log-line-info"
-         on:dblclick|preventDefault={toggleRaw} role="none">
+    <div class="log-line-info">
       <div class="log-line-msg">
         {#if line.nfo.exception }
           <ShowException msg={line.nfo.msg} exception={line.nfo.exception} />
@@ -109,7 +109,7 @@
     </div>
 
   {:else}
-    <div class="log-line-txt" on:dblclick|preventDefault={toggleRaw} role="none">
+    <div class="log-line-txt">
       <span class="log-line-plain-msg">
         {#if line.nfo.exception }
           <ShowException msg={line.nfo.msg} exception={line.nfo.exception} />
@@ -129,6 +129,8 @@
     </div>
   {/if}
   {/if}
+
+  <div class="toggler" on:click={toggleRaw}><ToggleRawIcon/></div>
 
 </div>
 
@@ -150,6 +152,7 @@
     --meta-size: 120px;
     font-size: 13px;
     font-weight: 400;
+    position: relative;
   }
   .log-line.full {
     font-size: 14px;
@@ -219,9 +222,11 @@
   .log-line-meta {
     margin-right: 4px;
   }
+  .log-line .toggler,
   .log-line .log-line-meta {
     visibility: hidden;
   }
+  .log-line:hover .toggler,
   .log-line:hover .log-line-meta {
     visibility: visible;
   }
@@ -239,5 +244,15 @@
   }
   .log-line-num {
     font-size: 0.8em;
+  }
+  .toggler {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    cursor: pointer;
+    opacity: 0.5;
+  }
+  .toggler:hover {
+    opacity: 1.0;
   }
 </style>
