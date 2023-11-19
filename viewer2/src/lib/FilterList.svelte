@@ -60,6 +60,11 @@
   }
   .log-filter-line:hover {
     opacity: 1;
+    color: #ff5722;
+  }
+  .log-filter-line:hover .log-filter-close-icon {
+    opacity: 1.0;
+    fill: red;
   }
   .log-filter-line.neg {
     background: #fcc;
