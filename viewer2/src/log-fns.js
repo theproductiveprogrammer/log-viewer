@@ -18,7 +18,6 @@ import { compact, makeNumlines, makeFilters, makeSearch, makeSelections } from '
  * field so that we can compare it with the new text.
  */
 export default async function makeLog(name, transformers, txt, log) {
-  log.txt = txt;
   let lines = txt2Lines(txt);
   lines = transform(transformers, lines);
   if(!lines || !lines.length) {

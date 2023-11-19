@@ -20,13 +20,16 @@
 
   async function copyAction() {
     if(disabled) return;
-    let txt = log.txt;
+
+    let current;
     if(selections && selections.length) {
-      txt = log.lines
-        .filter(l => log.view.selections.contains(l.num))
+      current = log.lines.filter(l => log.view.selections.contains(l.num));
+    } else {
+      current = log.lines.filter(l => !l.x);
+    }
+    const txt = current
         .map(l => l.orig?l.orig:l.txt)
         .join("\n");
-    }
     copyToClipboard(txt);
     ping = true;
     setTimeout(() => ping = false, 1000);
