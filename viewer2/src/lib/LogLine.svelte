@@ -130,7 +130,7 @@
   {/if}
   {/if}
 
-  <div class="toggler" on:click={toggleRaw}><ToggleRawIcon/></div>
+  <div class="toggler" on:click={toggleRaw} role="none"><ToggleRawIcon/></div>
 
 </div>
 
